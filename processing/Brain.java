@@ -1,11 +1,7 @@
 package processing;
 
-
-
 import slrt.OpticalModel;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Brain implements Runnable {
     
