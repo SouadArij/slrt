@@ -8,46 +8,53 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Brain implements Runnable {
+    
+    private final Object lockObject = new Object();
 
-    private boolean changed;
     private OpticalModel parentOpticalModel;
+    private boolean changed;
     private int result;
     
 
     public Brain(OpticalModel om) {
         this.parentOpticalModel = om;
-
+        
+        this.changed = false;
         this.result = -1;        
     }
-
-    @Override
-    public void run() {
-        Random r = new Random();
-
-        try {
-            //this is where the Algorithm method will be called (possibly other classes involded)            
-            Thread.sleep(500);
-            
-            this.result = r.nextInt(100);
-            this.setChanged(true);
-            this.notifyOpticalModel();
-            this.setChanged(false);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Brain.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    /*after processing is done, the OpticalModel is notified that image is ready*/
 
     public void notifyOpticalModel() {
         parentOpticalModel.setNewResultFromBrain(true);
     }
 
-    public void setChanged(boolean chng) {
-        this.changed = chng;
-    }
-
-    public String getResult() {
+    public int getResult() {
+        synchronized (this.lockObject) {
+            this.changed = false;
+        }
         return this.result;
     }
+
+    @Override
+    public void run() {
+        Random r = new Random();
+        int currentResult = this.result;
+
+        /*
+         * This is where the Algorithm method will be called (possibly other classes involded).
+         * For now, instead a simple sleep will be called for simulation purposes.
+         */
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+
+        currentResult = r.nextInt(100);
+        if (currentResult != this.result) {
+            synchronized (this.lockObject){
+                this.changed = true;
+            }
+            this.notifyOpticalModel();
+        }        
+    }    
 }
