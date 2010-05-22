@@ -1,0 +1,5 @@
+ .dashedRectangle {
+    -fx-border-style: dotted;
+    -fx-border-color: #67644e;
+    -fx-border-width: 2;
+}
