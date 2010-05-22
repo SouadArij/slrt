@@ -39,9 +39,10 @@ public class GUINewTest extends GUIInterface {
     var img14:Image = Image {url: "{__DIR__}icons/backsecond.png"};
     var imagePlay: Image;
     var imagePause: Image = img4;
-    var imageStop: Image = img7;
+    var imageStop: Image;
     var imageNext: Image = img10;
     var imageBack: Image = img13;
+    var imageButtons: Image[];
     var string: String = "";
     var correct: Boolean;
     var fillColor: Color;
@@ -53,7 +54,8 @@ public class GUINewTest extends GUIInterface {
    
     public override function GUI(model: OpticalModel) {
         this.om = model;
-        this.imagePlay = this.img4;
+        this.imageButtons[0] = this.img4;
+        this.imageButtons[3] = this.img7;
         this.string = "";
      }
 
@@ -73,13 +75,20 @@ public class GUINewTest extends GUIInterface {
             //updateButtons();
             //println("Value of arg passed: {this.indexOfButtonPressed}");
             }
-    function updateButtons(hB: Boolean[]):Image{
-            var img:Image;
+    function updateButtons(hB: Boolean[]):Image[]{
+            var img:Image[];
             if (hB[0]){
-                img = img5;
+                img[0] = img5;
                 }
             else{
-                img = img4;
+                img[0] = img4;
+                }
+
+            if (hB[3]){
+                img[3] = img8;
+                }
+            else{
+                img[3] = img7;
                 }
             return img;
          }
@@ -104,91 +113,91 @@ public class GUINewTest extends GUIInterface {
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(10s)
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(20s)
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(30s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(40s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(50s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(60s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(70s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(80s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(90s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(100s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(110s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(120s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(130s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             },
                 at(140s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
-            this.imagePlay => updateButtons(this.highlightedButtons);
+            this.imageButtons => updateButtons(this.highlightedButtons);
             }]
     }.play();
     
@@ -349,42 +358,28 @@ public class GUINewTest extends GUIInterface {
         }
     }
 
-    var img6:Image = img4;
     var playImage: ImageView = ImageView {
         layoutX: 10
         layoutY: 44
         //scaleX: 2.0
         //scaleY: 2.0
-        image: bind imagePlay
+        image: bind imageButtons[0]
         fitWidth: 80
         fitHeight: 80
         opacity: 0.6
-       /* onMouseEntered: function (e){
-        img6 = img5;
-        }
-        onMouseExited: function(e){
-        img6 = img4;
-        }*/
-
     }
 
-    var img9:Image = img7;
+
     var stopImage: ImageView = ImageView {
         layoutX: 555
         layoutY: 44
         //scaleX: 2.0
         //scaleY: 2.0
-        image: bind img9
+        image: bind imageButtons[3]
         fitWidth: 80
         fitHeight: 80
         opacity: 0.6
-        onMouseEntered: function (e){
-        img9 = img8;
         }
-        onMouseExited: function(e){
-        img9 = img7;
-        }
-    }
 
    var img12:Image = img10;
     var nextWordImage: ImageView = ImageView {

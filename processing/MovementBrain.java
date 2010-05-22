@@ -52,6 +52,8 @@ public class MovementBrain implements Runnable {
             this.noiseMovementDetected[i] = false;
             this.noiseCounter[i] = 0;
         }
+        this.buttonHighlighted[3] = true;
+        this.buttonPressed[3] = true;
         change1 = false;
         change2 = false;
         bool = false;
@@ -92,17 +94,20 @@ public class MovementBrain implements Runnable {
 
     private void checkStaticButton(int index, int btnX, int btnY) {
         boolean movement = this.movementDetected(btnX, btnY);
-        if (!(this.buttonPressed[index])) {
+        int otherIndex = Math.abs(index-3);
+        if (!(this.buttonPressed[index]) && this.buttonPressed[otherIndex]) {
             if (change1 && (this.noiseCounter[index] >= nrFrames)) {
                 if (movement) {
                     System.out.println("Button pressed!" + System.currentTimeMillis());
                     //this.buttonHighlighted[index] = false;
                     this.buttonPressed[index] = true;
+                    this.buttonPressed[otherIndex] = false;
                     this.noiseCounter[index] = 0;
                     this.change1 = false;
                 } else {
                     System.out.println("Highlight!" + System.currentTimeMillis());
                     this.buttonHighlighted[index] = true;
+                    this.buttonHighlighted[otherIndex] = false;
                 }
             } else if (change1 && (this.noiseCounter[index] < nrFrames)) {
                 if (movement) {
