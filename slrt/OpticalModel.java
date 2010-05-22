@@ -15,7 +15,9 @@ import processing.Brain;
 import processing.EyeWebcam;
 import java.awt.Color;
 import java.util.Observable;
+import java.util.Random;
 import processing.MovementBrain;
+import xmlparser.XMLWrite;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -43,12 +45,26 @@ public class OpticalModel extends Observable implements Runnable {
     private Thread movementBrainThread;
     private String resultFromBrain;
     private Boolean[] resultFromMovementBrain;
+    private String displayedWord="JeG";
+    private String currentWord="JeGaaaa";
+    private BufferedImage wordImage;
+    private File XMLName;
 
     public OpticalModel(Controller c) {
         this.controller = c;
         data = new Vector<Object>();
         this.xmlParser = new XMLParser();
+        this.XMLName = new File("src/db/letters/letters.xml");
+        if (XMLName.exists()) {
+            importDataFromXML();
+        } else {
+            XMLWrite xmlWriter = new XMLWrite();
+            xmlWriter.generateXMLLetters();
+            xmlWriter.generateXMLDictionary();
+        }
         this.brain = new Brain(this);
+        this.wordImage = this.getNextImage();
+        this.controller.gi.setWordImage(this.wordImage);
         this.movementBrain = new MovementBrain(this);
         this.eye = new EyeWebcam(this, brain);
         this.brainThread = new Thread(this.brain);
@@ -104,6 +120,27 @@ public class OpticalModel extends Observable implements Runnable {
         resultFromMovementBrain = movementBrain.getHighlightedButtons();
     }
 
+     public int generateRandomInteger(int startRange, int stopRange)
+    {
+    Random random = new Random();
+    {if ( startRange > stopRange ) {
+            throw new IllegalArgumentException("Start cannot exceed End.");
+                 }
+    long range = (long)stopRange - (long)startRange + 1;
+    long fraction = (long)(range * random.nextDouble());
+    return   (int)(fraction + startRange);}
+     }
+
+    public BufferedImage getNextImage(){
+
+     return (images.get(generateRandomInteger(0,images.size()-1))).getImage();
+    }
+
+    public void setWordImage()
+    {
+        this.controller.gi.setWordImage(this.wordImage);
+    }
+
     @Override
     public void run() {
         byte typeOfAction;
@@ -116,7 +153,11 @@ public class OpticalModel extends Observable implements Runnable {
                 }
 
             if (newResultFromBrain) {
-                this.setChanged();
+                 this.displayedWord+=this.resultFromBrain;
+                if((this.currentWord).contains(this.displayedWord))
+                    this.controller.gi.setDisplayedString(this.displayedWord,true);
+                else
+                    this.controller.gi.setDisplayedString(this.displayedWord,false);
                 typeOfAction |= 2;
                 this.newResultFromBrain = false;
             }
