@@ -16,6 +16,7 @@ import processing.EyeWebcam;
 import java.awt.Color;
 import java.util.Observable;
 import processing.MovementBrain;
+import xmlparser.XMLWrite;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -43,6 +44,7 @@ public class OpticalModel extends Observable implements Runnable {
     private Thread movementBrainThread;
     private String resultFromBrain;
     private int resultFromMovementBrain;
+    File XMLName;
 
     public OpticalModel(Controller c) {
         this.controller = c;
@@ -50,13 +52,23 @@ public class OpticalModel extends Observable implements Runnable {
         this.xmlParser = new XMLParser();
         this.brain = new Brain(this);
         this.movementBrain = new MovementBrain(this);
+        this.XMLName = new File("src/db/letters/letters.xml");
+        if (XMLName.exists()) {
+            importDataFromXML();
+        } else {
+            XMLWrite xmlWriter = new XMLWrite();
+            xmlWriter.generateXMLLetters();
+            xmlWriter.generateXMLDictionary();
+        }
         this.eye = new EyeWebcam(this, brain);
         this.brainThread = new Thread(this.brain);
         this.movementBrainThread = new Thread(this.movementBrain);
         this.eye.start();
         this.brainThread.start();
         this.movementBrainThread.start();
-        importDataFromXML();
+
+
+
         currentImage = getCapturedImageFromEye();
     }
 
@@ -72,11 +84,11 @@ public class OpticalModel extends Observable implements Runnable {
         return eye.getImage();
     }
 
-    public int getIndexOfButtonFromMovementBrain(){
+    public int getIndexOfButtonFromMovementBrain() {
         return this.movementBrain.getIndexOfButtonPushed();
     }
 
-        public BufferedImage getCurrentImage() {
+    public BufferedImage getCurrentImage() {
         return this.currentImage;
     }
 
@@ -90,7 +102,7 @@ public class OpticalModel extends Observable implements Runnable {
         this.changedImage = b;
     }
 
-    public boolean imageHasChanged(){
+    public boolean imageHasChanged() {
         return this.changedImage;
     }
 
@@ -113,7 +125,7 @@ public class OpticalModel extends Observable implements Runnable {
                 this.setChanged();
                 typeOfAction |= 1;
                 this.changedImage = false;
-                }
+            }
 
             if (newResultFromBrain) {
                 this.setChanged();
@@ -126,8 +138,9 @@ public class OpticalModel extends Observable implements Runnable {
                 typeOfAction |= 4;
                 this.newResultFromMovementBrain = false;
             }
-            if (typeOfAction != 0)
-            this.notifyObservers(typeOfAction);
+            if (typeOfAction != 0) {
+                this.notifyObservers(typeOfAction);
+            }
         }
     }
 }

@@ -28,7 +28,7 @@ public class Controller {
         //this.view = new GUI(model);
         gi.GUI(model);
         //this.view.setVisible(true);
-        this.opticalModelThread = new Thread(this.model);
+       this.opticalModelThread = new Thread(this.model);
         //this.viewThread = new Thread(this.view);
         gi.run();
         model.addObserver(gi);
