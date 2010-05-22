@@ -26,6 +26,7 @@ public class Brain implements Runnable {
         this.parentOpticalModel = om;
     }
 
+    @Override
     public void run() {
 
         try {
@@ -33,8 +34,10 @@ public class Brain implements Runnable {
             //this.wait(30);
             Thread.sleep(30);
             
-            result = Long.toString(Math.abs(r.nextLong()), 36);
-
+            this.result = Long.toString(Math.abs(r.nextLong()), 36);
+            this.setChanged(true);
+            this.notifyOpticalModel();
+            this.setChanged(false);
         } catch (InterruptedException ex) {
             Logger.getLogger(Brain.class.getName()).log(Level.SEVERE, null, ex);
         }
