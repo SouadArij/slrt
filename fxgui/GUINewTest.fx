@@ -20,6 +20,7 @@ import slrt.OpticalModel;
 import java.util.Observable;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
+import java.awt.image.BufferedImage;
                             
 public class GUINewTest extends GUIInterface {
 
@@ -41,9 +42,10 @@ public class GUINewTest extends GUIInterface {
     var imageStop: Image = img7;
     var imageNext: Image = img10;
     var imageBack: Image = img13;
-    var string: String;
+    var string: String = "";
     var correct: Boolean;
     var fillColor: Color;
+    var wordImage: BufferedImage;
 
 
 
@@ -58,7 +60,11 @@ public class GUINewTest extends GUIInterface {
     public override function setDisplayedString(displayedWord : String ,  corect : Boolean) {
             this.string = displayedWord;
             this.correct = correct;
-            }
+    }
+
+    public override function setWordImage(wordImage: BufferedImage) {
+        this.wordImage = wordImage;
+    }
 
     public override function update(ob: Observable, args: Object){
             //var ceva: java.lang.Byte = bind args as java.lang.Byte;
@@ -432,13 +438,26 @@ public class GUINewTest extends GUIInterface {
         content: bind this.string
     }
 
+    setWordImage(wordImage);
+
+    var imageWord : ImageView = ImageView {
+        layoutX: 80
+        layoutY: 380
+        scaleX: 0.8
+        scaleY: 0.8
+        image: bind javafx.ext.swing.SwingUtils.toFXImage(this.wordImage);
+        }
+
+
     var scene : Scene = Scene {
     stylesheets: "{__DIR__}dashedRectangle.css";
     content: [
         webcamView, upRect, rail ,downRect, leftRect, rightRect, closeImage, playImage, stopImage,
-        nextWordImage, backImage, word
+        nextWordImage, backImage, word, imageWord
         ]
     };
+
+    
 
     Stage {
         //title: "Application title"

@@ -1,9 +1,9 @@
 package xmlparser;
 
-
-
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Vector;
-
+import javax.imageio.ImageIO;
 
 /*
  * This is just a replacement class for the future implementation
@@ -23,8 +23,19 @@ public class XMLParser {
         Letter l2 = new Letter("B", "D:/letters/letterB/");
         letters.add(l);
         letters.add(l2);
-        MyImage i = new MyImage("dog", "D:/images/dog.bmp");
-        MyImage i2 = new MyImage("cat", "D:/images/cat.bmp");
+
+        BufferedImage dog = null;
+        BufferedImage cat = null;
+
+        try {
+            dog = ImageIO.read(new File("src/db/dictionary/dog.jpg"));
+            cat = ImageIO.read(new File("src/db/dictionary/cat.jpg"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MyImage i = new MyImage("dog", dog);
+        MyImage i2 = new MyImage("cat", cat);
         images.add(i);
         images.add(i2);
     }
