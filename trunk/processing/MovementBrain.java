@@ -16,13 +16,15 @@ import slrt.OpticalModel;
  */
 public class MovementBrain implements Runnable {
 
+    private static int THRESHOLD_DIFFERENCE = 70000;
     OpticalModel parentOpticalModel;
     private BufferedImage previousImageForDetection;
     private BufferedImage currentImageForDetection;
-    private int threshold_diff = 40000;
     private int nrRequiredFrames = 5;
     private int btnPlay_x = 295;
     private int btnPlay_y = 25;
+    private int btnStop_x = 25;
+    private int btnStop_y = 25;
     private int radius = 20;
     private int actionPlay;
     private boolean play;
@@ -32,8 +34,11 @@ public class MovementBrain implements Runnable {
     private boolean newImage;
     private boolean[] noiseMovementDetected = new boolean[4];
     private int[] noiseCounter = new int[4];
-    private boolean[] buttonHighlighted = new boolean[4];
+    private Boolean[] buttonHighlighted = new Boolean[4];
     private boolean[] buttonPressed = new boolean[4];
+    private final int nrFrames = 4;
+    private boolean change1, change2, bool;
+    private int first = 0;
 
     public MovementBrain(OpticalModel om) {
         this.parentOpticalModel = om;
@@ -41,16 +46,25 @@ public class MovementBrain implements Runnable {
         this.currentImageForDetection = this.parentOpticalModel.getCurrentImage();
         this.newImage = false;
         this.indexOfButtonPressed = 0;
+        for (int i = 0; i < 4; i++) {
+            this.buttonHighlighted[i] = false;
+            this.buttonPressed[i] = false;
+            this.noiseMovementDetected[i] = false;
+            this.noiseCounter[i] = 0;
+        }
+        change1 = false;
+        change2 = false;
+        bool = false;
     }
 
-    private boolean movementDetected(int buttonX, int buttonY){
-        int y, x;
-        int Play_x = buttonX;
-        int Play_y = buttonY;
-        if (this.previousImageForDetection.getWidth() > 1 && this.currentImageForDetection.getWidth() > 1) {
+    private boolean movementDetected(int buttonX, int buttonY) {
+        int x = 0;
+        int y = 0;
+        // skip the first image from the webcam that comes black and with width 1
+        if (this.previousImageForDetection.getHeight() == 240 && this.currentImageForDetection.getWidth() == 320) {
             int btn_diff = 0;
-            for (y = Play_y - radius; y < Play_y + radius; y++) {
-                for (x = Play_x - radius; x < Play_x + radius; x++) {
+            for (y = buttonY - radius; y < buttonY + radius; y++) {
+                for (x = buttonX - radius; x < buttonX + radius; x++) {
                     int colorA = (new Color(currentImageForDetection.getRGB(x, y))).getRed();
                     int colorB = (new Color(previousImageForDetection.getRGB(x, y))).getRed();
                     btn_diff += Math.abs(colorB - colorA);
@@ -62,86 +76,80 @@ public class MovementBrain implements Runnable {
                     btn_diff += Math.abs(colorB - colorA);
                 }
             }
-
-            if (btn_diff > threshold_diff)
+            if (btn_diff > 0) {
+                System.out.println("Difference: " + btn_diff);
+            }
+            if (btn_diff > this.THRESHOLD_DIFFERENCE) {
+                System.out.println("MOVEMENT! " + btn_diff);
+                // this.first++;
+                // if (this.first > 1) {
                 return true;
+                // }
+            }
         }
         return false;
     }
 
-    private void checkButton(int index, int btnX, int btnY) {
-        if (this.movementDetected(btnX, btnY))
-        {
-            if (this.noiseMovementDetected[index]){
-                this.noiseMovementDetected[index] = false;
-                this.noiseCounter[index] = 0;
-            } else {
-                this.noiseMovementDetected[index] = true;
-            }
-        }
-        else {
-            if (this.noiseCounter[index] > 10) {
-                this.noiseMovementDetected[index] = false;
-                if(!this.buttonHighlighted[index])
+    private void checkStaticButton(int index, int btnX, int btnY) {
+        boolean movement = this.movementDetected(btnX, btnY);
+        if (!(this.buttonPressed[index])) {
+            if (change1 && (this.noiseCounter[index] >= nrFrames)) {
+                if (movement) {
+                    System.out.println("Button pressed!" + System.currentTimeMillis());
+                    //this.buttonHighlighted[index] = false;
+                    this.buttonPressed[index] = true;
+                    this.noiseCounter[index] = 0;
+                    this.change1 = false;
+                } else {
+                    System.out.println("Highlight!" + System.currentTimeMillis());
                     this.buttonHighlighted[index] = true;
-            }
-            else{
-                this.buttonHighlighted[index] = false;
-                this.buttonPressed[index] = true;
-            }
-            if (this.noiseMovementDetected[index])
-                this.noiseCounter[index]++;
-            }
-        }
-/*
- *
-        int y, x;
-        //System.out.println("previousImageForDetection.getWidth():" + this.previousImageForDetection.getWidth());
-        //System.out.println("previousImageForDetection.getHeight():" + this.previousImageForDetection.getHeight());
-        //System.out.println("currentImageForDetection.getWidth():" + this.currentImageForDetection.getWidth());
-        //System.out.println("currentImageForDetection.getHeight():" + this.currentImageForDetection.getHeight());
-        if (this.previousImageForDetection.getWidth() > 1 && this.currentImageForDetection.getWidth() > 1) {
-            int btnStart_diff = 0;
-            for (y = btnPlay_y - radius; y < btnPlay_y + radius; y++) {
-                for (x = btnPlay_x - radius; x < btnPlay_x + radius; x++) {
-                    int colorA = (new Color(currentImageForDetection.getRGB(x, y))).getRed();
-                    int colorB = (new Color(previousImageForDetection.getRGB(x, y))).getRed();
-                    btnStart_diff += Math.abs(colorB - colorA);
-                    colorA = (new Color(currentImageForDetection.getRGB(x, y))).getBlue();
-                    colorB = (new Color(previousImageForDetection.getRGB(x, y))).getBlue();
-                    btnStart_diff += Math.abs(colorB - colorA);
-                    colorA = (new Color(currentImageForDetection.getRGB(x, y))).getGreen();
-                    colorB = (new Color(previousImageForDetection.getRGB(x, y))).getGreen();
-                    btnStart_diff += Math.abs(colorB - colorA);
+                }
+            } else if (change1 && (this.noiseCounter[index] < nrFrames)) {
+                if (movement) {
+                    this.noiseCounter[index] = 0;
+                    this.change1 = false;
+                    System.out.println("Change1 was not good!" + System.currentTimeMillis());
 
+                } else {
+                    this.noiseCounter[index]++;
+                    System.out.println("Counter increased!" + System.currentTimeMillis());
 
                 }
-            }
-
-            //if (btnStart_diff > threshold_diff) {
-            // System.out.println("btnStart_diff" + btnStart_diff);
-            // }
-
-            if (btnStart_diff > threshold_diff && actionPlay == 0) {
-                actionPlay++;
-            } else if (actionPlay >= nrRequiredFrames) {
-                this.play = true;
-                actionPlay = 0;
-            } else if (btnStart_diff > threshold_diff && actionPlay > 1) {
-                actionPlay = 0;
-            } else if (btnStart_diff < threshold_diff && actionPlay > 0) {
-                actionPlay++;
+            } else if (!change1 && movement) {
+                System.out.println("Change1!" + System.currentTimeMillis());
+                this.change1 = true;
             }
         }
-        if (play) {
-            this.buttonDynamicActionDetected = true;
-            this.indexOfButtonPressed = 1;
-            System.out.println("PLAY button has been pushed!!!!");
-            this.play = false;
-        }*/
+    }
 
-    public void updateButtonStatus(){
-        this.checkButton(0, btnPlay_x, btnPlay_x);
+    private void checkDynamicButton(int index, int btnX, int btnY) {
+        boolean movement = this.movementDetected(btnX, btnY);
+        if (change1 && (this.noiseCounter[index] >= nrFrames)) {
+            if (movement) {
+                System.out.println("Button pressed!" + System.currentTimeMillis());
+                this.buttonHighlighted[index] = false;
+                this.buttonPressed[index] = true;
+                this.noiseCounter[index] = 0;
+                this.change1 = false;
+            } else {
+                System.out.println("Highlight!" + System.currentTimeMillis());
+                this.buttonHighlighted[index] = true;
+            }
+        } else if (change1 && (this.noiseCounter[index] < nrFrames)) {
+            if (movement) {
+                this.noiseCounter[index] = 0;
+                this.change1 = false;
+                System.out.println("Change1 was not good!" + System.currentTimeMillis());
+
+            } else {
+                this.noiseCounter[index]++;
+                System.out.println("Counter increased!" + System.currentTimeMillis());
+
+            }
+        } else if (!change1 && movement) {
+            System.out.println("Change1!" + System.currentTimeMillis());
+            this.change1 = true;
+        }
     }
 
     public void notifyOpticalModel() {
@@ -152,6 +160,10 @@ public class MovementBrain implements Runnable {
         return this.indexOfButtonPressed;
     }
 
+    public Boolean[] getHighlightedButtons() {
+        return this.buttonHighlighted;
+    }
+
     public void setNewImage(boolean b) {
         this.newImage = b;
     }
@@ -159,41 +171,23 @@ public class MovementBrain implements Runnable {
     @Override
     public void run() {
         while (true) {
+            // set the two images needed for comparison
             this.previousImageForDetection = this.currentImageForDetection;
             this.currentImageForDetection = this.parentOpticalModel.getCapturedImageFromEye();
 
+            // check if button has been pressed or highlighted and notify OpticalModel
+            if (this.previousImageForDetection != null && this.currentImageForDetection != null) {
+                this.checkStaticButton(0, btnPlay_x, btnPlay_y);
+                this.checkStaticButton(0, btnStop_x, btnStop_y);
 
-            if (this.previousImageForDetection != null && this.currentImageForDetection != null && this.newImage) {
-                this.updateButtonStatus();
-                if (this.buttonStaticActionDetected) {
-                    this.notifyOpticalModel();
-                    try {
-                        Thread.sleep(200);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(MovementBrain.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
-                if (this.buttonDynamicActionDetected) {
-                    this.notifyOpticalModel();
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(MovementBrain.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    this.indexOfButtonPressed = 0;
-                    this.notifyOpticalModel();
-                    this.buttonDynamicActionDetected = false;
-                    
-                }
-                this.newImage = false;
+                this.notifyOpticalModel();
             }
             try {
-                Thread.sleep(100);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
+                // skip if there is no image from webcam
                 Logger.getLogger(MovementBrain.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
     }
 }

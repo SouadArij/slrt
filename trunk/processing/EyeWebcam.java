@@ -47,6 +47,7 @@ public class EyeWebcam {
             Iterator<CaptureDeviceInfo> dlit = deviceList.iterator();
             System.out.println("Connected capture device:");
             if (dlit.hasNext()) {
+                //dlit.next();
                 CaptureDeviceInfo info = (CaptureDeviceInfo) dlit.next();
                 System.out.println(info.getDescription());
                 CaptureStream cs = captureSystem.openCaptureDeviceStream(info.getDeviceID());

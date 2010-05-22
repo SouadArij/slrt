@@ -26,7 +26,7 @@ public class GUINewTest extends GUIInterface {
 
     var om: OpticalModel;
     var currImg: Image;
-    var indexOfButtonPressed: Number;
+    var highlightedButtons: Boolean[];
     var img1:Image = Image {url: "{__DIR__}icons/closefirst.png"};
     var img2:Image = Image {url: "{__DIR__}icons/closesecond.png"};
     var img4:Image = Image {url: "{__DIR__}icons/playfirst.png"};
@@ -73,16 +73,27 @@ public class GUINewTest extends GUIInterface {
             //updateButtons();
             //println("Value of arg passed: {this.indexOfButtonPressed}");
             }
-    function updateButtons(nr: Float ):Image{
+    function updateButtons(hB: Boolean[]):Image{
             var img:Image;
-            if (nr == 0.0){
-                img = img4;
-            }
-            else if (nr == 1.0){
+            if (hB[0]){
                 img = img5;
-            }
+                }
+            else{
+                img = img4;
+                }
             return img;
          }
+
+    function getHighlightedButtons():Boolean[]
+    {
+        var result:Boolean[];
+        var i: java.lang.Integer = 0;
+        for (nr in om.getResultFromMovementBrain()){
+            result[i] = nr;
+            i++;}
+        return result;
+
+    }
 
     public override function run() {
    // println("Value of arg passed image initial: {this.imagePlay}");
@@ -92,92 +103,92 @@ public class GUINewTest extends GUIInterface {
     keyFrames: [at(0s)
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(10s)
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(20s)
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(30s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(40s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(50s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(60s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(70s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(80s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(90s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(100s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(110s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(120s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(130s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             },
                 at(140s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
-            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            this.highlightedButtons => getHighlightedButtons();
+            this.imagePlay => updateButtons(this.highlightedButtons);
             }]
     }.play();
     
@@ -318,22 +329,20 @@ public class GUINewTest extends GUIInterface {
            
     }*/
 
-    var img3:Image = img1;
-    if (this.indexOfButtonPressed == 1) img3 = img2;
-    var closeImage: ImageView = ImageView {
+     var closeImage: ImageView = ImageView {
         layoutX: 600
         layoutY: -5
         scaleX: 0.8
         scaleY: 0.8
-        image: bind img3
+        image: bind img1
         fitWidth: 50
         fitHeight: 50
         opacity: 0.7
         onMouseEntered: function (e){
-        img3 = img2;
+        //img3 = img2;
         }
         onMouseExited: function(e){
-        img3 = img1;
+       // img3 = img1;
         }
         onMouseClicked: function(e) {
             FX.exit();
