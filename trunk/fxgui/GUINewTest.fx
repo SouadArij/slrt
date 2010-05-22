@@ -7,7 +7,6 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.StageStyle;
-import javafx.scene.shape.Circle;
 import javafx.scene.effect.*;
 import javafx.animation.*;
 import javafx.scene.*;
@@ -19,6 +18,8 @@ import javafx.scene.shape.*;
 import javafx.stage.Stage;
 import slrt.OpticalModel;
 import java.util.Observable;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
                             
 public class GUINewTest extends GUIInterface {
 
@@ -40,6 +41,7 @@ public class GUINewTest extends GUIInterface {
     var imageStop: Image = img7;
     var imageNext: Image = img10;
     var imageBack: Image = img13;
+    var string: String;
 
 
 
@@ -322,11 +324,26 @@ public class GUINewTest extends GUIInterface {
         }
     }
 
+    this.string = "dog";
+
+    var word: Text = Text {
+        x: 250
+        y: 450
+        font: Font {
+            name: "Comic Sans MS"
+            size: 50
+        }
+        fill: Color.LIGHTBLUE
+        stroke: Color.WHITE
+        strokeWidth: 0.5
+        content: bind this.string
+    }
+
     var scene : Scene = Scene {
     stylesheets: "{__DIR__}dashedRectangle.css";
     content: [
         webcamView, upRect, rail ,downRect, leftRect, rightRect, closeImage, playImage, stopImage,
-        nextWordImage, backImage
+        nextWordImage, backImage, word
         ]
     };
 
