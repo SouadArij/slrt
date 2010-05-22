@@ -11,22 +11,24 @@ public class Brain implements Runnable {
 
     private boolean changed;
     private OpticalModel parentOpticalModel;
-    private String result = "";
-    private Random r = new Random();
+    private int result;
+    
 
     public Brain(OpticalModel om) {
         this.parentOpticalModel = om;
+
+        this.result = -1;        
     }
 
     @Override
     public void run() {
+        Random r = new Random();
 
         try {
-            //this is where the Algorithm method will be called (possibly other classes involded)
-            //this.wait(30);
+            //this is where the Algorithm method will be called (possibly other classes involded)            
             Thread.sleep(500);
             
-            this.result = Long.toString(Math.abs(r.nextLong()), 36);
+            this.result = r.nextInt(100);
             this.setChanged(true);
             this.notifyOpticalModel();
             this.setChanged(false);
