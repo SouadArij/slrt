@@ -42,7 +42,8 @@ public class GUINewTest extends GUIInterface {
     var imageNext: Image = img10;
     var imageBack: Image = img13;
     var string: String;
-
+    var correct: Boolean;
+    var fillColor: Color;
 
 
 
@@ -51,7 +52,14 @@ public class GUINewTest extends GUIInterface {
     public override function GUI(model: OpticalModel) {
         this.om = model;
         this.imagePlay = this.img4;
+        this.string = "";
      }
+
+    public override function setDisplayedString(displayedWord : String ,  corect : Boolean) {
+            this.string = displayedWord;
+            this.correct = correct;
+            }
+
     public override function update(ob: Observable, args: Object){
             //var ceva: java.lang.Byte = bind args as java.lang.Byte;
            // if (args == 4)
@@ -400,8 +408,17 @@ public class GUINewTest extends GUIInterface {
         }
     }
 
-    this.string = "dog";
+    setDisplayedString(string, correct);
 
+    if (correct == true) {
+        fillColor = Color.LIGHTSEAGREEN;
+    }
+    else {
+        fillColor = Color.RED;
+    }
+
+
+    
     var word: Text = Text {
         x: 250
         y: 450
@@ -409,7 +426,7 @@ public class GUINewTest extends GUIInterface {
             name: "Comic Sans MS"
             size: 50
         }
-        fill: Color.LIGHTBLUE
+        fill: bind fillColor
         stroke: Color.WHITE
         strokeWidth: 0.5
         content: bind this.string

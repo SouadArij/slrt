@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.util.Observable;
 import processing.MovementBrain;
 import xmlparser.XMLWrite;
+import java.util.Random;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -43,6 +44,9 @@ public class OpticalModel extends Observable implements Runnable {
     private Thread brainThread;
     private Thread movementBrainThread;
     private String resultFromBrain;
+    private String displayedWord;
+    private String currentWord;
+  
     private int resultFromMovementBrain;
     File XMLName;
 
@@ -71,11 +75,11 @@ public class OpticalModel extends Observable implements Runnable {
 
         currentImage = getCapturedImageFromEye();
     }
-
+ //nu mai fol
     public Vector<MyImage> getImages() {
         return images;
     }
-
+//nu mai fol
     public int getImagesNumber() {
         return images.size();
     }
@@ -106,9 +110,11 @@ public class OpticalModel extends Observable implements Runnable {
         return this.changedImage;
     }
 
+    //gets the resulting letter
     public void setNewResultFromBrain(boolean b) {
         this.newResultFromBrain = b;
-        resultFromBrain = brain.getResult();
+        this.resultFromBrain = brain.getResult();
+
     }
 
     public void setNewResultFromMovementBrain(boolean b) {
@@ -116,6 +122,28 @@ public class OpticalModel extends Observable implements Runnable {
         resultFromMovementBrain = movementBrain.getIndexOfButtonPushed();
     }
 
+
+    public int generateRandomInteger(int startRange, int stopRange)
+    {
+    Random random = new Random();
+    {if ( startRange > stopRange ) {
+            throw new IllegalArgumentException("Start cannot exceed End.");
+                 }
+    long range = (long)stopRange - (long)startRange + 1;
+    long fraction = (long)(range * random.nextDouble());
+    return   (int)(fraction + startRange);}
+     }
+
+    public String getNextImage(){
+     return (images.get(generateRandomInteger(0,images.size()-1))).getURL();
+    }
+
+    public void clearLetter(){
+     String buffer=new String();
+     buffer.copyValueOf(this.displayedWord.toCharArray(), 0, (this.displayedWord.length())-1);
+     this.displayedWord=buffer;
+    }
+    
     @Override
     public void run() {
         byte typeOfAction;
@@ -128,9 +156,15 @@ public class OpticalModel extends Observable implements Runnable {
             }
 
             if (newResultFromBrain) {
-                this.setChanged();
+                // this.setChanged();
+                this.displayedWord+=this.resultFromBrain;
+                if((this.currentWord).contains(this.displayedWord))
+                    this.controller.gi.setDisplayedString(this.displayedWord,true);
+                else
+                    this.controller.gi.setDisplayedString(this.displayedWord,false);
                 typeOfAction |= 2;
                 this.newResultFromBrain = false;
+
             }
 
             if (newResultFromMovementBrain) {
@@ -138,8 +172,10 @@ public class OpticalModel extends Observable implements Runnable {
                 typeOfAction |= 4;
                 this.newResultFromMovementBrain = false;
             }
-            if (typeOfAction != 0) {
-                this.notifyObservers(typeOfAction);
+
+
+          if (typeOfAction != 0) {
+//                this.notifyObservers(typeOfAction);
             }
         }
     }
