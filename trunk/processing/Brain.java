@@ -7,19 +7,11 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author Nick
- */
 public class Brain implements Runnable {
 
     private boolean changed;
     private OpticalModel parentOpticalModel;
-    private String result="";
+    private String result = "";
     private Random r = new Random();
 
     public Brain(OpticalModel om) {
