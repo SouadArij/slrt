@@ -1,5 +1,6 @@
 package fxgui;
 
+import java.awt.image.BufferedImage;
 import java.util.Observer;
 import slrt.OpticalModel;
 
@@ -18,5 +19,7 @@ public interface GUIInterface extends Observer {
     public void GUI(OpticalModel m);
 
     public void setDisplayedString(String displayedWord, boolean b);
+
+    public void setWordImage(BufferedImage wordImage);
 
 }

@@ -1,5 +1,7 @@
 package xmlparser;
 
+import java.awt.image.BufferedImage;
+
 
 
 /*
@@ -13,18 +15,18 @@ package xmlparser;
 public class MyImage {
 
     private String name;
-    private String url;
+    private BufferedImage image;
 
-    public MyImage(String name, String url) {
+    public MyImage(String name, BufferedImage image) {
         this.name = name;
-        this.url = url;
+        this.image = image;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public String getURL() {
-        return this.url;
+    public BufferedImage getImage() {
+        return this.image;
     }
 }

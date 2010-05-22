@@ -32,7 +32,7 @@ public class Brain implements Runnable {
         try {
             //this is where the Algorithm method will be called (possibly other classes involded)
             //this.wait(30);
-            Thread.sleep(30);
+            Thread.sleep(500);
             
             this.result = Long.toString(Math.abs(r.nextLong()), 36);
             this.setChanged(true);
