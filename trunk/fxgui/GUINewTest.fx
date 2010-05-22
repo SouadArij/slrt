@@ -36,7 +36,7 @@ public class GUINewTest extends GUIInterface {
     var img11:Image = Image {url: "{__DIR__}icons/nextwordsecond.png"};
     var img13:Image = Image {url: "{__DIR__}icons/backfirst.png"};
     var img14:Image = Image {url: "{__DIR__}icons/backsecond.png"};
-    var imagePlay: Image = img4;
+    var imagePlay: Image;
     var imagePause: Image = img4;
     var imageStop: Image = img7;
     var imageNext: Image = img10;
@@ -49,24 +49,25 @@ public class GUINewTest extends GUIInterface {
 
    
     public override function GUI(model: OpticalModel) {
-        om = model;
+        this.om = model;
+        this.imagePlay = this.img4;
      }
     public override function update(ob: Observable, args: Object){
             //var ceva: java.lang.Byte = bind args as java.lang.Byte;
-            if (args == 4)
-            this.indexOfButtonPressed = om.getIndexOfButtonFromMovementBrain();
-            updateButtons();
+           // if (args == 4)
+           /// this.indexOfButtonPressed = om.getIndexOfButtonFromMovementBrain();
+            //updateButtons();
             //println("Value of arg passed: {this.indexOfButtonPressed}");
             }
-    function updateButtons(){
-            if (this.indexOfButtonPressed == 0.0){
-                this.imagePlay = img4;
+    function updateButtons(nr: Float ):Image{
+            var img:Image;
+            if (nr == 0.0){
+                img = img4;
             }
-            if (this.indexOfButtonPressed == 1.0){
-          //      println("Value of arg passed image: {this.imagePlay}");
-
-                this.imagePlay = img5;
+            else if (nr == 1.0){
+                img = img5;
             }
+            return img;
          }
 
     public override function run() {
@@ -74,21 +75,96 @@ public class GUINewTest extends GUIInterface {
 
    Timeline {
     repeatCount: Timeline.INDEFINITE
-    keyFrames: [at(0s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(10s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(20s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(30s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(40s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(50s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(60s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(70s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(80s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(90s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(100s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(110s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(120s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(130s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());},
-                at(140s){currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());}]
+    keyFrames: [at(0s)
+            {
+            this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(10s)
+            {
+            this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(20s)
+            {
+            this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(30s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(40s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(50s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(60s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(70s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(80s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(90s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(100s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(110s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(120s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(130s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            },
+                at(140s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.indexOfButtonPressed => om.getIndexOfButtonFromMovementBrain();
+            this.imagePlay => updateButtons(this.indexOfButtonPressed);
+            }]
     }.play();
     
 
