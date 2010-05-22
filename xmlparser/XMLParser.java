@@ -4,6 +4,7 @@ package xmlparser;
 
 import java.util.Vector;
 
+
 /*
  * This is just a replacement class for the future implementation
  * of the XML creating and parsing.

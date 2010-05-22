@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.xml.stream.*;
-import javax.xml.stream.XMLOutputFactory;
 
 /**
  *
@@ -23,14 +22,14 @@ public class XMLWrite {
     private String word;
 
     public void generateXMLLetters() {
+
         try {
-            BufferedReader br = new BufferedReader(new FileReader(new File("db/letters.txt")));
+            BufferedReader br = new BufferedReader(new FileReader(new File("src/db/letters/letters.txt")));
 
             try {
                 XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-                FileWriter output = new FileWriter(new File("db/letters.xml"));
+                FileWriter output = new FileWriter(new File("src/db/letters/letters.xml"));
                 XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(output);
-                xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
 
                 xmlStreamWriter.writeStartElement("letters");
 
@@ -40,7 +39,7 @@ public class XMLWrite {
                     xmlStreamWriter.writeCharacters(this.letter);
                     xmlStreamWriter.writeEndElement();
                     xmlStreamWriter.writeStartElement("path");
-                    xmlStreamWriter.writeCharacters("db/letters/" + this.letter + "/");
+                    xmlStreamWriter.writeCharacters("src/db/letters/" + this.letter + "/");
                     xmlStreamWriter.writeEndElement();
                     xmlStreamWriter.writeEndElement();
                 }
@@ -49,42 +48,35 @@ public class XMLWrite {
 
                 xmlStreamWriter.flush();
                 xmlStreamWriter.close();
-
-            } catch (FileNotFoundException e1) {
-
-                e1.printStackTrace();
-            } catch (IOException e) {
-
+            } catch (Exception e) {
                 e.printStackTrace();
-
             }
-
-        } catch (FactoryConfigurationError e) {
-        } catch (XMLStreamException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
-    public void generateXMLDictionary() {
+
+public void generateXMLDictionary() {
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader(new File("db/dictionary.txt")));
+            BufferedReader br = new BufferedReader(new FileReader(new File("src/db/dictionary/dictionary.txt")));
 
             try {
                 XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-                FileWriter output = new FileWriter(new File("db/dictionary.xml"));
+                FileWriter output = new FileWriter(new File("src/db/dictionary/dictionary.xml"));
                 XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(output);
-                xmlStreamWriter.writeStartDocument("UTF-8", "1.0");
 
                 xmlStreamWriter.writeStartElement("dictionary");
 
-                while ((this.letter = br.readLine()) != null) {
+                while((this.word = br.readLine()) != null) {
                     xmlStreamWriter.writeStartElement("word");
                     xmlStreamWriter.writeStartElement("name");
-                    xmlStreamWriter.writeCharacters(this.letter);
+                    xmlStreamWriter.writeCharacters(this.word);
                     xmlStreamWriter.writeEndElement();
                     xmlStreamWriter.writeStartElement("path");
-                    xmlStreamWriter.writeCharacters("db/dictionary/"+this.word+".jpg");
+                    xmlStreamWriter.writeCharacters("src/db/dictionary/" + this.word + ".jpg");
                     xmlStreamWriter.writeEndElement();
                     xmlStreamWriter.writeEndElement();
                 }
@@ -93,19 +85,14 @@ public class XMLWrite {
 
                 xmlStreamWriter.flush();
                 xmlStreamWriter.close();
-
-            } catch (FileNotFoundException e1) {
-
-                e1.printStackTrace();
-            } catch (IOException e) {
-
+            } catch (Exception e) {
                 e.printStackTrace();
-
             }
-
-        } catch (FactoryConfigurationError e) {
-        } catch (XMLStreamException e) {
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 }
+
+
