@@ -15,6 +15,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
+import java.awt.image.ImagingOpException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -108,11 +109,6 @@ public class EyeWebcam {
                     RenderingHints.VALUE_INTERPOLATION_BICUBIC));
 
             BufferedImage bi = AWTImageConverter.toBufferedImage(arg1);
-            if (bi.getWidth() > 320 && bi.getHeight() > 240 && bi!= null ) {
-                //bi = op.filter(bi, null);
-            }
-
-
             if (bi != null) {
                 setImage(bi);
                 notifyWaitingComponents();
