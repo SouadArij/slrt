@@ -8,24 +8,30 @@ public class Brain implements Runnable {
     private final Object lockObject = new Object();
 
     private OpticalModel parentOpticalModel;
-    private boolean changed;
+    private boolean capturedImageChanged;
     private int result;
     
 
     public Brain(OpticalModel om) {
         this.parentOpticalModel = om;
         
-        this.changed = false;
+        this.capturedImageChanged = false;
         this.result = -1;        
     }
 
-    private void notifyOpticalModel() {
-        this.parentOpticalModel.setBrainResultChanged();
+    /*
+     * This is called from the sibling Eye.
+     * Whenever a new image was captured by the cam, this is set.
+     * It means that at the next iteration, the brain _will have to_
+     * process a new image. That then can be get from the eye.
+     */
+    public void setCapturedImageChanged() {
+        this.capturedImageChanged = true;
     }
 
     public int getResult() {
         synchronized (this.lockObject) {
-            this.changed = false;
+            this.capturedImageChanged = false;
         }
         return this.result;
     }
@@ -35,22 +41,36 @@ public class Brain implements Runnable {
         Random r = new Random();
         int currentResult = this.result;
 
-        /*
-         * This is where the Algorithm method will be called (possibly other classes involded).
-         * For now, instead a simple sleep will be called for simulation purposes.
-         */
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+        while (true) {
 
-        currentResult = r.nextInt(100);
-        if (currentResult != this.result) {
-            synchronized (this.lockObject){
-                this.changed = true;
+            if (this.capturedImageChanged) {
+
+                /*
+                 * This is where the Algorithm method will be called (possibly other classes involded).
+                 * For now, instead a simple sleep will be called for simulation purposes.
+                 */
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                currentResult = r.nextInt(100);
             }
-            this.notifyOpticalModel();
-        }        
+            
+            if (currentResult != this.result) {
+                this.result = currentResult;
+                this.parentOpticalModel.setBrainResultChanged();
+            }
+
+            /*
+             * This is the normal sleep that relaxes the CPU a bit and
+             * lets other threads process fluently.
+             */
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
     }    
 }
