@@ -152,8 +152,8 @@ public class OpticalModel extends Observable implements Runnable {
                 this.changedImage = false;
                 }
 
-            if (newResultFromBrain) {
-                 this.displayedWord += new Integer(this.resultFromBrain).toString();
+            if (newResultFromBrain) {//indexing for A is at 0 but the int returned from brain for A is 1
+                 this.displayedWord +=this.letters.get(this.resultFromBrain+1).getName();
                 if((this.currentWord).contains(this.displayedWord))
                     this.controller.gi.setDisplayedString(this.displayedWord,true);
                 else
