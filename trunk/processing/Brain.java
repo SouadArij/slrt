@@ -19,8 +19,8 @@ public class Brain implements Runnable {
         this.result = -1;        
     }
 
-    public void notifyOpticalModel() {
-        parentOpticalModel.setNewResultFromBrain(true);
+    private void notifyOpticalModel() {
+        this.parentOpticalModel.setNewResultFromBrain(true);
     }
 
     public int getResult() {
