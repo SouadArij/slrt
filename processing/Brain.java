@@ -1,23 +1,23 @@
+
 package processing;
 
 import slrt.OpticalModel;
 import java.util.Random;
 
 public class Brain implements Runnable {
-
+    
     private final Object lockObject = new Object();
 
     private OpticalModel parentOpticalModel;
-
     private boolean capturedImageChanged;
     private int result;
-
+    
 
     public Brain(OpticalModel om) {
         this.parentOpticalModel = om;
-
+        
         this.capturedImageChanged = false;
-        this.result = -1;
+        this.result = -1;        
     }
 
     /*
@@ -35,16 +35,14 @@ public class Brain implements Runnable {
     public int getResult() {
         return this.result;
     }
-
-
+    
+ 
     @Override
     public void run() {
         Random r = new Random();
         int currentResult = this.result;
 
-
         while (true) {
-
 
             if (this.capturedImageChanged) {
                 synchronized (this.lockObject) {
@@ -61,10 +59,12 @@ public class Brain implements Runnable {
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
+              
                 currentResult = r.nextInt(100);
             }
-
+            
             if (currentResult != this.result) {
+                
                 this.result = currentResult;
                 this.parentOpticalModel.setBrainResultChanged();
             }
@@ -79,5 +79,6 @@ public class Brain implements Runnable {
                 ex.printStackTrace();
             }
         }
-    }
+    }    
 }
+
