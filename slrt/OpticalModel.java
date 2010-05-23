@@ -43,7 +43,7 @@ public class OpticalModel extends Observable implements Runnable {
     private Controller controller;
     private Thread brainThread;
     private Thread movementBrainThread;
-    private String resultFromBrain;
+    private int resultFromBrain;
     private Boolean[] resultFromMovementBrain;
     private String displayedWord="JeG";
     private String currentWord="JeGaaaa";
@@ -110,9 +110,9 @@ public class OpticalModel extends Observable implements Runnable {
         return this.changedImage;
     }
 
-    public void setNewResultFromBrain(boolean b) {
-        this.newResultFromBrain = b;
-        resultFromBrain = brain.getResult();
+    public void setNewResultFromBrain() {
+        this.newResultFromBrain = true;
+        this.resultFromBrain = brain.getResult();
     }
 
     public void setNewResultFromMovementBrain(boolean b) {
@@ -153,7 +153,7 @@ public class OpticalModel extends Observable implements Runnable {
                 }
 
             if (newResultFromBrain) {
-                 this.displayedWord+=this.resultFromBrain;
+                 this.displayedWord += Integer.parseInt(this.resultFromBrain);
                 if((this.currentWord).contains(this.displayedWord))
                     this.controller.gi.setDisplayedString(this.displayedWord,true);
                 else
