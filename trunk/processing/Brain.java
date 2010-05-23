@@ -35,7 +35,7 @@ public class Brain implements Runnable {
         return this.result;
     }
     
-
+ 
     @Override
     public void run() {
         Random r = new Random();
