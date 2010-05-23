@@ -446,7 +446,7 @@ public class GUINewTest extends GUIInterface {
 
     var imageWord : ImageView = ImageView {
         layoutX: 80
-        layoutY: 380
+        layoutY: 360
         scaleX: 0.8
         scaleY: 0.8
         image: bind javafx.ext.swing.SwingUtils.toFXImage(this.wordImage);
