@@ -1,7 +1,5 @@
 package processing;
 
-
-
 import slrt.OpticalModel;
 import com.lti.civil.CaptureDeviceInfo;
 import com.lti.civil.CaptureException;
@@ -12,7 +10,11 @@ import com.lti.civil.CaptureSystemFactory;
 import com.lti.civil.DefaultCaptureSystemFactorySingleton;
 import com.lti.civil.Image;
 import com.lti.civil.awt.AWTImageConverter;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -95,13 +97,21 @@ public class EyeWebcam {
 
     private class MyCaptureObserver implements CaptureObserver {
 
-
         public MyCaptureObserver(EyeWebcam e) {
         }
 
+        @Override
         public void onNewImage(CaptureStream arg0, Image arg1) {
+            BufferedImageOp op = new AffineTransformOp(
+                    AffineTransform.getScaleInstance(0.5, 0.5),
+                    new RenderingHints(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BICUBIC));
 
             BufferedImage bi = AWTImageConverter.toBufferedImage(arg1);
+            if (bi.getWidth() > 320 && bi.getHeight() > 240 && bi!= null ) {
+                //bi = op.filter(bi, null);
+            }
+
 
             if (bi != null) {
                 setImage(bi);
@@ -110,6 +120,7 @@ public class EyeWebcam {
 
         }
 
+        @Override
         public void onError(CaptureStream arg0, CaptureException arg1) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
