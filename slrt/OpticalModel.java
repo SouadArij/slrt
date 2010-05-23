@@ -110,7 +110,7 @@ public class OpticalModel extends Observable implements Runnable {
         return this.changedImage;
     }
 
-    public void setNewResultFromBrain() {
+    public void setBrainResultChanged() {
         this.newResultFromBrain = true;
         this.resultFromBrain = brain.getResult();
     }
@@ -153,7 +153,7 @@ public class OpticalModel extends Observable implements Runnable {
                 }
 
             if (newResultFromBrain) {
-                 this.displayedWord += Integer.parseInt(this.resultFromBrain);
+                 this.displayedWord += new Integer(this.resultFromBrain).toString();
                 if((this.currentWord).contains(this.displayedWord))
                     this.controller.gi.setDisplayedString(this.displayedWord,true);
                 else
