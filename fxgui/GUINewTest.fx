@@ -51,12 +51,12 @@ public class GUINewTest extends GUIInterface {
 
 
 
-   
+    //function that simulates the java constructor
     public override function GUI(model: OpticalModel) {
         this.om = model;
         this.imageButtons[0] = this.img4;
-        this.imageButtons[0] = this.img10;
-        this.imageButtons[0] = this.img13;
+        this.imageButtons[1] = this.img10;
+        this.imageButtons[2] = this.img13;
         this.imageButtons[3] = this.img7;
         this.string = "";
      }
@@ -71,12 +71,9 @@ public class GUINewTest extends GUIInterface {
     }
 
     public override function update(ob: Observable, args: Object){
-            //var ceva: java.lang.Byte = bind args as java.lang.Byte;
-           // if (args == 4)
-           /// this.indexOfButtonPressed = om.getIndexOfButtonFromMovementBrain();
-            //updateButtons();
-            //println("Value of arg passed: {this.indexOfButtonPressed}");
-            }
+    }
+
+    //function for updating the button image when movement detected. Returns the array of images for all buttons
     function updateButtons(hB: Boolean[]):Image[]{
             var img:Image[];
             if (hB[0]){
@@ -106,6 +103,7 @@ public class GUINewTest extends GUIInterface {
             return img;
          }
 
+    //function to return the boolean array that gives which button has been highlighted from the OpticalModel
     function getHighlightedButtons():Boolean[]
     {
         var result:Boolean[];
@@ -118,8 +116,8 @@ public class GUINewTest extends GUIInterface {
     }
 
     public override function run() {
-   // println("Value of arg passed image initial: {this.imagePlay}");
 
+   //timeline to define the way FX gets its values from OpticalModel and updates the Scene
    Timeline {
     repeatCount: Timeline.INDEFINITE
     keyFrames: [at(0s)
@@ -213,34 +211,14 @@ public class GUINewTest extends GUIInterface {
             this.imageButtons => updateButtons(this.highlightedButtons);
             }]
     }.play();
-    
 
+    var sceneX : Number = 300;
+    var sceneY : Number = 200;
 
-    def path = [
-    MoveTo {
-        x: 350
-        y: 150
-    }
-    LineTo {
-        x: 350
-        y: 350
-    }
+    //path for drawing the frame where the sign must be made
+    def path = [MoveTo {x: 350 y: 150} LineTo {x: 350 y: 350} LineTo {x: 617 y: 350} LineTo {x: 617 y: 150} LineTo {x: 350 y: 150}];
 
-        LineTo {
-        x: 617
-        y: 350
-    }
-
-        LineTo {
-        x: 617
-        y: 150
-    }
-           LineTo {
-        x: 350
-        y: 150
-    }
-];
-
+    //Image view for the webcam image to be displayed
     var webcamView: ImageView = ImageView {
                 layoutX: 3
                 layoutY: 40.0
@@ -253,8 +231,7 @@ public class GUINewTest extends GUIInterface {
                 cache: true
     }
 
-    var sceneX : Number = 300;
-    var sceneY : Number = 200;
+    //Rectangle to be displayed on the top of the webcam image
     var upRect : Rectangle = Rectangle {
         y: 0
         height: 40
@@ -325,31 +302,6 @@ public class GUINewTest extends GUIInterface {
     strokeDashOffset: 1
     effect: DropShadow{}
 }
-/*
-    var bigRectangle : Rectangle = Rectangle {
-        y: 0
-        height: 202
-        width: 268
-        styleClass: "dashedRectangle"
-
-    }
-
-    var smallRectangle : Rectangle = Rectangle {
-        x: 1
-        y: 1
-        height: 200
-        width: 266
-    }
-
-    var border = ShapeSubtract {
-            layoutX: 350
-            layoutY: 100
-            fill: Color.DARKRED
-            a: bigRectangle
-           
-            effect: DropShadow {}
-           
-    }*/
 
      var closeImage: ImageView = ImageView {
         layoutX: 600
@@ -374,8 +326,6 @@ public class GUINewTest extends GUIInterface {
     var playImage: ImageView = ImageView {
         layoutX: 10
         layoutY: 44
-        //scaleX: 2.0
-        //scaleY: 2.0
         image: bind imageButtons[0]
         fitWidth: 80
         fitHeight: 80
@@ -386,8 +336,6 @@ public class GUINewTest extends GUIInterface {
     var stopImage: ImageView = ImageView {
         layoutX: 555
         layoutY: 44
-        //scaleX: 2.0
-        //scaleY: 2.0
         image: bind imageButtons[3]
         fitWidth: 80
         fitHeight: 80
@@ -397,8 +345,6 @@ public class GUINewTest extends GUIInterface {
     var nextWordImage: ImageView = ImageView {
         layoutX: 170
         layoutY: 44
-        //scaleX: 2.0
-        //scaleY: 2.0
         image: bind imageButtons[1]
         fitWidth: 80
         fitHeight: 80
@@ -410,8 +356,6 @@ public class GUINewTest extends GUIInterface {
     var backImage: ImageView = ImageView {
         layoutX: 320
         layoutY: 44
-        //scaleX: 2.0
-        //scaleY: 2.0
         image: bind imageButtons[2]
         fitWidth: 80
         fitHeight: 80
@@ -426,9 +370,7 @@ public class GUINewTest extends GUIInterface {
     else {
         fillColor = Color.RED;
     }
-
-
-    
+ 
     var word: Text = Text {
         x: 250
         y: 450
@@ -443,7 +385,6 @@ public class GUINewTest extends GUIInterface {
     }
 
     setWordImage(wordImage);
-
     var imageWord : ImageView = ImageView {
         layoutX: 80
         layoutY: 360
@@ -454,9 +395,9 @@ public class GUINewTest extends GUIInterface {
 
 
     var scene : Scene = Scene {
-    stylesheets: "{__DIR__}dashedRectangle.css";
     content: [
-        webcamView, upRect, rail ,downRect, leftRect, rightRect, closeImage, playImage, stopImage,
+        webcamView, upRect, rail ,downRect, leftRect,
+        rightRect, closeImage, playImage, stopImage,
         nextWordImage, backImage, word, imageWord
         ]
     };
@@ -464,7 +405,6 @@ public class GUINewTest extends GUIInterface {
     
 
     Stage {
-        //title: "Application title"
         x: bind sceneX
         y: bind sceneY
         resizable: false
@@ -473,6 +413,5 @@ public class GUINewTest extends GUIInterface {
         height: 560
         scene: scene
     }
-
   }
 }

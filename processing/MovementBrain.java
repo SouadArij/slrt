@@ -16,16 +16,17 @@ import slrt.OpticalModel;
  */
 public class MovementBrain implements Runnable {
 
-    private static int THRESHOLD_DIFFERENCE = 70000;
-    private static int PLAY_BUTTON_X = 295;
-    private static int PLAY_BUTTON_Y = 25;
-    private static int STOP_BUTTON_X = 25;
-    private static int STOP_BUTTON_Y = 25;
-    private static int BACK_BUTTON_X = 25;
-    private static int BACK_BUTTON_Y = 25;
-    private static int NEXTWORD_BUTTON_X = 25;
-    private static int NEXTWORD_BUTTON_Y = 25;
-    private static int BUTTON_RADIUS = 20;
+    private static int imageSizeSetting = 1;
+    private static int THRESHOLD_DIFFERENCE = 70000 / imageSizeSetting;
+    private static int PLAY_BUTTON_X = 295 * imageSizeSetting;
+    private static int PLAY_BUTTON_Y = 25 * imageSizeSetting;
+    private static int STOP_BUTTON_X = 25 * imageSizeSetting;
+    private static int STOP_BUTTON_Y = 25 * imageSizeSetting;
+    private static int BACK_BUTTON_X = 25 * imageSizeSetting;
+    private static int BACK_BUTTON_Y = 25 * imageSizeSetting;
+    private static int NEXTWORD_BUTTON_X = 25 * imageSizeSetting;
+    private static int NEXTWORD_BUTTON_Y = 25 * imageSizeSetting;
+    private static int BUTTON_RADIUS = 20 * imageSizeSetting;
     private static int BUTTON_SENSITIVITY = 4;
     OpticalModel parentOpticalModel;
     private BufferedImage previousImageForDetection;
@@ -59,7 +60,10 @@ public class MovementBrain implements Runnable {
         System.out.println(this.previousImageForDetection.getHeight());
         System.out.println(this.previousImageForDetection.getWidth());
         // skip the first image from the webcam that comes black and with width 1
-        if (this.previousImageForDetection.getHeight() == 240 && this.currentImageForDetection.getWidth() == 320) {
+        if (this.previousImageForDetection.getHeight() >= 240 && this.currentImageForDetection.getWidth() >= 320) {
+            if (this.previousImageForDetection.getHeight() == 480 && this.currentImageForDetection.getWidth() == 640) {
+                MovementBrain.imageSizeSetting = 2;
+            }
             int btn_diff = 0;
             for (y = buttonY - BUTTON_RADIUS; y < buttonY + BUTTON_RADIUS; y++) {
                 for (x = buttonX - BUTTON_RADIUS; x < buttonX + BUTTON_RADIUS; x++) {
@@ -74,15 +78,9 @@ public class MovementBrain implements Runnable {
                     btn_diff += Math.abs(colorB - colorA);
                 }
             }
-            if (btn_diff > 0) {
-                System.out.println("Difference: " + btn_diff);
-            }
             if (btn_diff > MovementBrain.THRESHOLD_DIFFERENCE) {
                 System.out.println("MOVEMENT! " + btn_diff);
-                // this.first++;
-                // if (this.first > 1) {
                 return true;
-                // }
             }
         }
         return false;
@@ -95,7 +93,6 @@ public class MovementBrain implements Runnable {
             if (change1 && (this.noiseCounter[index] >= BUTTON_SENSITIVITY)) {
                 if (movement) {
                     System.out.println("Button pressed!" + System.currentTimeMillis());
-                    //this.buttonHighlighted[index] = false;
                     this.buttonPressed[index] = true;
                     this.buttonPressed[otherIndex] = false;
                     this.noiseCounter[index] = 0;
@@ -109,7 +106,7 @@ public class MovementBrain implements Runnable {
                 if (movement) {
                     this.noiseCounter[index] = 0;
                     this.change1 = false;
-                    System.out.println("Change1 was not good!" + System.currentTimeMillis());
+                    System.out.println("Change was just noise!" + System.currentTimeMillis());
 
                 } else {
                     this.noiseCounter[index]++;
@@ -117,7 +114,7 @@ public class MovementBrain implements Runnable {
 
                 }
             } else if (!change1 && movement) {
-                System.out.println("Change1!" + System.currentTimeMillis());
+                System.out.println("Change!" + System.currentTimeMillis());
                 this.change1 = true;
             }
         }
@@ -140,7 +137,7 @@ public class MovementBrain implements Runnable {
             if (movement) {
                 this.noiseCounter[index] = 0;
                 this.change1 = false;
-                System.out.println("Change1 was not good!" + System.currentTimeMillis());
+                System.out.println("Change was just noise!" + System.currentTimeMillis());
 
             } else {
                 this.noiseCounter[index]++;
@@ -148,7 +145,7 @@ public class MovementBrain implements Runnable {
 
             }
         } else if (!change1 && movement) {
-            System.out.println("Change1!" + System.currentTimeMillis());
+            System.out.println("Change!" + System.currentTimeMillis());
             this.change1 = true;
         }
     }
