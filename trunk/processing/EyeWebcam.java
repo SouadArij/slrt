@@ -88,7 +88,7 @@ public class EyeWebcam {
     }
 
     public void notifyWaitingComponents() {
-        siblingBrain.setChanged(true);
+        siblingBrain.setCapturedImageChanged();
         parentOpticalModel.setChanged(true);
 
     }
