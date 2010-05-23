@@ -26,13 +26,12 @@ public class Brain implements Runnable {
      * process a new image. That then can be get from the eye.
      */
     public void setCapturedImageChanged() {
-        this.capturedImageChanged = true;
+        synchronized (this.lockObject) {
+            this.capturedImageChanged = true;
+        }
     }
 
     public int getResult() {
-        synchronized (this.lockObject) {
-            this.capturedImageChanged = false;
-        }
         return this.result;
     }
 
@@ -44,6 +43,9 @@ public class Brain implements Runnable {
         while (true) {
 
             if (this.capturedImageChanged) {
+                synchronized (this.lockObject) {
+                    this.capturedImageChanged = false;
+                }
 
                 /*
                  * This is where the Algorithm method will be called (possibly other classes involded).
