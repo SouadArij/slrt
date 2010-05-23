@@ -102,8 +102,7 @@ public class OpticalModel extends Observable implements Runnable {
     }
 
     public void setChanged(boolean b) {
-        this.movementBrain.setNewImage(true);
-        this.changedImage = b;
+         this.changedImage = b;
     }
 
     public boolean imageHasChanged(){
