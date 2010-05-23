@@ -113,6 +113,7 @@ public class OpticalModel extends Observable implements Runnable {
     public void setBrainResultChanged() {
         this.newResultFromBrain = true;
         this.resultFromBrain = brain.getResult();
+        
     }
 
     public void setNewResultFromMovementBrain(boolean b) {
@@ -152,12 +153,17 @@ public class OpticalModel extends Observable implements Runnable {
                 this.changedImage = false;
                 }
 
-            if (newResultFromBrain) {//indexing for A is at 0 but the int returned from brain for A is 1
-                 this.displayedWord +=this.letters.get(this.resultFromBrain+1).getName();
-                if((this.currentWord).contains(this.displayedWord))
+            if (newResultFromBrain) {
+                 this.displayedWord += new Integer(this.resultFromBrain).toString();//(this.letters.get(this.resultFromBrain+1)).getName;
+                
+                  // need to make gui take the string and the boolean for current char
+                /* if((this.currentWord).contains(this.displayedWord))
+                     //true if the letter is ok
                     this.controller.gi.setDisplayedString(this.displayedWord,true);
                 else
+                    //false if the letter is wtong
                     this.controller.gi.setDisplayedString(this.displayedWord,false);
+                */
                 typeOfAction |= 2;
                 this.newResultFromBrain = false;
             }
