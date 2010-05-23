@@ -183,7 +183,7 @@ public class MovementBrain implements Runnable {
             // check if button has been pressed or highlighted and notify OpticalModel
             if (this.previousImageForDetection != null && this.currentImageForDetection != null) {
                 this.checkStaticButton(0, btnPlay_x, btnPlay_y);
-                this.checkStaticButton(0, btnStop_x, btnStop_y);
+                this.checkStaticButton(3, btnStop_x, btnStop_y);
 
                 this.notifyOpticalModel();
             }
