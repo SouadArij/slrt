@@ -55,6 +55,8 @@ public class GUINewTest extends GUIInterface {
     public override function GUI(model: OpticalModel) {
         this.om = model;
         this.imageButtons[0] = this.img4;
+        this.imageButtons[0] = this.img10;
+        this.imageButtons[0] = this.img13;
         this.imageButtons[3] = this.img7;
         this.string = "";
      }
@@ -83,11 +85,22 @@ public class GUINewTest extends GUIInterface {
             else{
                 img[0] = img4;
                 }
-
+            if (hB[1]){
+                img[1] = img11;
+                }
+            else {
+                img[1] = img10;
+                }
+            if (hB[2]){
+                img[2] = img14;
+                }
+            else {
+                img[2] = img13;
+                }
             if (hB[3]){
                 img[3] = img8;
                 }
-            else{
+            else {
                 img[3] = img7;
                 }
             return img;
@@ -381,22 +394,15 @@ public class GUINewTest extends GUIInterface {
         opacity: 0.6
         }
 
-   var img12:Image = img10;
     var nextWordImage: ImageView = ImageView {
         layoutX: 170
         layoutY: 44
         //scaleX: 2.0
         //scaleY: 2.0
-        image: bind img12
+        image: bind imageButtons[1]
         fitWidth: 80
         fitHeight: 80
         opacity: 0.6
-        onMouseEntered: function (e){
-        img12 = img11;
-        }
-        onMouseExited: function(e){
-        img12 = img10;
-        }
     }
 
 
@@ -406,16 +412,10 @@ public class GUINewTest extends GUIInterface {
         layoutY: 44
         //scaleX: 2.0
         //scaleY: 2.0
-        image: bind img15
+        image: bind imageButtons[2]
         fitWidth: 80
         fitHeight: 80
         opacity: 0.6
-        onMouseEntered: function (e){
-        img15 = img14;
-        }
-        onMouseExited: function(e){
-        img15 = img13;
-        }
     }
 
     setDisplayedString(string, correct);
