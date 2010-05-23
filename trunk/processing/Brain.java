@@ -34,6 +34,7 @@ public class Brain implements Runnable {
     public int getResult() {
         return this.result;
     }
+    
 
     @Override
     public void run() {
@@ -46,6 +47,7 @@ public class Brain implements Runnable {
                 synchronized (this.lockObject) {
                     this.capturedImageChanged = false;
                 }
+
 
                 /*
                  * This is where the Algorithm method will be called (possibly other classes involded).
