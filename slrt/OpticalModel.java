@@ -65,7 +65,7 @@ public class OpticalModel extends Observable implements Runnable {
         }
         this.brain = new Brain(this);
         this.wordImage = this.getNextImage();
-        this.controller.gi.setWordImage(this.wordImage);
+        //this.controller.gi.setWordImage(this.wordImage);
         this.movementBrain = new MovementBrain(this);
         this.eye = new EyeWebcam(this, brain);
         this.brainThread = new Thread(this.brain);
@@ -137,10 +137,10 @@ public class OpticalModel extends Observable implements Runnable {
      return (images.get(generateRandomInteger(0,images.size()-1))).getImage();
     }
 
-    public void setWordImage()
-    {
-        this.controller.gi.setWordImage(this.wordImage);
-    }
+//    public void setWordImage()
+//    {
+//        this.controller.gi.setWordImage(this.wordImage);
+//    }
 
     public String getDisplayedWord()
     {
@@ -150,6 +150,10 @@ public class OpticalModel extends Observable implements Runnable {
     public boolean getDisplayedWordCorrect()
     {
         return this.displayedWordCorrect;
+    }
+
+    public BufferedImage getWordImage() {
+        return this.wordImage;
     }
 
     @Override

@@ -58,18 +58,21 @@ public class GUINewTest extends GUIInterface {
         this.imageButtons[1] = this.img10;
         this.imageButtons[2] = this.img13;
         this.imageButtons[3] = this.img7;
-        this.string = "";
+        //this.string = "";
      }
 
-    public override function setDisplayedString(displayedWord : String ,  corect : Boolean) {
+   /*
+   public override function setDisplayedString(displayedWord : String ,  corect : Boolean) {
             this.string = displayedWord;
             this.correct = correct;
     }
 
+    /*
     public override function setWordImage(wordImage: BufferedImage) {
         this.wordImage = wordImage;
-    }
+    }*/
 
+    
     public override function update(ob: Observable, args: Object){
     }
 
@@ -118,12 +121,11 @@ public class GUINewTest extends GUIInterface {
     function getFillColor():Color {
 
         if (this.correct == true) {
-            return Color.LIGHTSEAGREEN;
+            return Color.SKYBLUE;
+;
         }
         else {
-            //return Color.RED;
-            return Color.SKYBLUE;
-            //Color.AQUA
+            return Color.rgb(242,57,104);           
         }
 
     }
@@ -142,6 +144,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(10s)
             {
@@ -151,6 +154,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(20s)
             {
@@ -160,6 +164,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(30s)
             {
@@ -169,6 +174,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(40s)
             {
@@ -178,6 +184,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(50s)
             {
@@ -187,6 +194,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(60s)
             {
@@ -196,6 +204,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(70s)
             {
@@ -205,6 +214,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(80s)
             {
@@ -214,6 +224,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(90s)
             {
@@ -223,6 +234,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(100s)
             {
@@ -232,6 +244,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(110s)
             {
@@ -241,6 +254,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(120s)
             {
@@ -250,6 +264,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(130s)
             {
@@ -259,6 +274,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             },
                 at(140s)
             {
@@ -268,6 +284,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getDisplayedWord();
             this.correct => om.getDisplayedWordCorrect();
             this.fillColor => getFillColor();
+            this.wordImage => om.getWordImage();
             }]
     }.play();
 
@@ -360,6 +377,7 @@ public class GUINewTest extends GUIInterface {
     strokeDashArray: [ 2 ]
     strokeDashOffset: 1
     effect: DropShadow{}
+    visible: bind highlightedButtons[0] //visible only when play button is highlighted
 }
 
      var closeImage: ImageView = ImageView {
@@ -402,7 +420,7 @@ public class GUINewTest extends GUIInterface {
         }
 
     var nextWordImage: ImageView = ImageView {
-        layoutX: 170
+        layoutX: 195
         layoutY: 44
         image: bind imageButtons[1]
         fitWidth: 80
@@ -411,9 +429,9 @@ public class GUINewTest extends GUIInterface {
     }
 
 
-    var img15:Image = img13;
+    //var img15:Image = img13;
     var backImage: ImageView = ImageView {
-        layoutX: 320
+        layoutX: 380
         layoutY: 44
         image: bind imageButtons[2]
         fitWidth: 80
@@ -422,33 +440,53 @@ public class GUINewTest extends GUIInterface {
     }
 
     var word: Text = Text {
-        x: 250
-        y: 450
+        x: 120
+        y: 467
         font: Font {
             name: "Comic Sans MS"
             size: 50
         }
         fill: bind fillColor
-        stroke: Color.WHITE
-        strokeWidth: 0.5
+        stroke: Color.DARKBLUE
+        strokeWidth: 0.4
+        effect: DropShadow{}
         content: bind this.string
+        visible: bind highlightedButtons[0] //visible only when play button is highlighted
+        //opacity: 0.95
     }
 
-    setWordImage(wordImage);
     var imageWord : ImageView = ImageView {
-        layoutX: 80
-        layoutY: 360
+        layoutX: 13
+        layoutY: 400
         scaleX: 0.8
         scaleY: 0.8
+        opacity: 0.76
+        effect: DropShadow{}
         image: bind javafx.ext.swing.SwingUtils.toFXImage(this.wordImage);
+        visible: bind highlightedButtons[0] //visible only when play button is highlighted
         }
+
+    var wordGrid : Rectangle = Rectangle {
+        x: 110
+        y: 409
+        width: 515
+        height: 84
+        arcWidth:10
+        arcHeight:10
+        fill: Color.GREY//WHITESMOKE
+        opacity: 0.2
+        effect: DropShadow{}
+        visible: bind highlightedButtons[0] //visible only when play button is highlighted
+        
+    }
+
 
 
     var scene : Scene = Scene {
     content: [
         webcamView, upRect, rail ,downRect, leftRect,
         rightRect, closeImage, playImage, stopImage,
-        nextWordImage, backImage, word, imageWord
+        nextWordImage, backImage, wordGrid, word, imageWord
         ]
     };
 
