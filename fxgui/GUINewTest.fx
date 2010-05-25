@@ -43,11 +43,11 @@ public class GUINewTest extends GUIInterface {
     var imageNext: Image = img10;
     var imageBack: Image = img13;
     var imageButtons: Image[];
-    var string: String = "";
+    var string: String;
     var correct: Boolean;
     var fillColor: Color;
     var wordImage: BufferedImage;
-
+    
 
 
 
@@ -115,6 +115,20 @@ public class GUINewTest extends GUIInterface {
 
     }
 
+    function getFillColor():Color {
+
+        if (this.correct == true) {
+            return Color.LIGHTSEAGREEN;
+        }
+        else {
+            //return Color.RED;
+            return Color.SKYBLUE;
+            //Color.AQUA
+        }
+
+    }
+
+
     public override function run() {
 
    //timeline to define the way FX gets its values from OpticalModel and updates the Scene
@@ -125,90 +139,135 @@ public class GUINewTest extends GUIInterface {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(10s)
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(20s)
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(30s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(40s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(50s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(60s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(70s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(80s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(90s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(100s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(110s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(120s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(130s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             },
                 at(140s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getDisplayedWord();
+            this.correct => om.getDisplayedWordCorrect();
+            this.fillColor => getFillColor();
             }]
     }.play();
 
@@ -362,15 +421,6 @@ public class GUINewTest extends GUIInterface {
         opacity: 0.6
     }
 
-    setDisplayedString(string, correct);
-
-    if (correct == true) {
-        fillColor = Color.LIGHTSEAGREEN;
-    }
-    else {
-        fillColor = Color.RED;
-    }
- 
     var word: Text = Text {
         x: 250
         y: 450

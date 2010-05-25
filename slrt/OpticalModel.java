@@ -49,6 +49,7 @@ public class OpticalModel extends Observable implements Runnable {
     private String currentWord="JeGaaaa";
     private BufferedImage wordImage;
     private File XMLName;
+    private boolean  displayedWordCorrect;
 
     public OpticalModel(Controller c) {
         this.controller = c;
@@ -141,6 +142,16 @@ public class OpticalModel extends Observable implements Runnable {
         this.controller.gi.setWordImage(this.wordImage);
     }
 
+    public String getDisplayedWord()
+    {
+        return this.displayedWord;
+    }
+
+    public boolean getDisplayedWordCorrect()
+    {
+        return this.displayedWordCorrect;
+    }
+
     @Override
     public void run() {
         byte typeOfAction;
@@ -153,16 +164,23 @@ public class OpticalModel extends Observable implements Runnable {
                 }
 
             if (newResultFromBrain) {
-                 this.displayedWord += new Integer(this.resultFromBrain).toString();//(this.letters.get(this.resultFromBrain+1)).getName;
+                 this.displayedWord += (new Integer(this.resultFromBrain)).toString();//(this.letters.get(this.resultFromBrain+1)).getName;
                 
-                  // need to make gui take the string and the boolean for current char
-                /* if((this.currentWord).contains(this.displayedWord))
+               /*   // need to make gui take the string and the boolean for current char
+                if((this.currentWord).contains(this.displayedWord))
                      //true if the letter is ok
                     this.controller.gi.setDisplayedString(this.displayedWord,true);
                 else
                     //false if the letter is wtong
                     this.controller.gi.setDisplayedString(this.displayedWord,false);
                 */
+
+                 if((this.currentWord).contains(this.displayedWord))
+                     this.displayedWordCorrect = true;
+                 else
+                     this.displayedWordCorrect = false;
+
+
                 typeOfAction |= 2;
                 this.newResultFromBrain = false;
             }
