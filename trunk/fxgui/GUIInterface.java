@@ -18,8 +18,8 @@ public interface GUIInterface extends Observer {
     public void run();
     public void GUI(OpticalModel m);
 
-    public void setDisplayedString(String displayedWord, boolean b);
+   // public void setDisplayedString(String displayedWord, boolean b);
 
-    public void setWordImage(BufferedImage wordImage);
+   // public void setWordImage(BufferedImage wordImage);
 
 }
