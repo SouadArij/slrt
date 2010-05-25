@@ -27,7 +27,7 @@ public class MovementBrain implements Runnable {
     private static int NEXTWORD_BUTTON_X = 25 * imageSizeSetting;
     private static int NEXTWORD_BUTTON_Y = 25 * imageSizeSetting;
     private static int BUTTON_RADIUS = 20 * imageSizeSetting;
-    private static int BUTTON_SENSITIVITY = 4;
+    private static int BUTTON_SENSITIVITY = 2;
     OpticalModel parentOpticalModel;
     private BufferedImage previousImageForDetection;
     private BufferedImage currentImageForDetection;
@@ -37,6 +37,7 @@ public class MovementBrain implements Runnable {
     private Boolean[] buttonHighlighted = new Boolean[4];
     private boolean[] buttonPressed = new boolean[4];
     private boolean change1;
+    private boolean keepFirstImage;
 
     public MovementBrain(OpticalModel om) {
         this.parentOpticalModel = om;
@@ -52,6 +53,7 @@ public class MovementBrain implements Runnable {
         this.buttonHighlighted[3] = true;
         this.buttonPressed[3] = true;
         change1 = false;
+        this.keepFirstImage = false;
     }
 
     private boolean movementDetected(int buttonX, int buttonY) {
@@ -80,6 +82,7 @@ public class MovementBrain implements Runnable {
             }
             if (btn_diff > MovementBrain.THRESHOLD_DIFFERENCE) {
                 System.out.println("MOVEMENT! " + btn_diff);
+                this.keepFirstImage = true;
                 return true;
             }
         }
@@ -87,66 +90,63 @@ public class MovementBrain implements Runnable {
     }
 
     private void checkStaticButton(int index, int btnX, int btnY) {
-        boolean movement = this.movementDetected(btnX, btnY);
         int otherIndex = Math.abs(index - 3);
         if (!(this.buttonPressed[index]) && this.buttonPressed[otherIndex]) {
-            if (change1 && (this.noiseCounter[index] >= BUTTON_SENSITIVITY)) {
-                if (movement) {
+            boolean movement = movementDetected(btnX, btnY);
+
+            if (this.noiseCounter[index] < BUTTON_SENSITIVITY && !movement) {
+                this.noiseCounter[index] = 0;
+            }
+
+            if (this.noiseCounter[index] >= BUTTON_SENSITIVITY) {
+                this.buttonHighlighted[index] = true;
+                this.buttonHighlighted[otherIndex] = false;
+                System.out.println("Button highlighted!" + System.currentTimeMillis());
+
+                if (!movement) {
                     System.out.println("Button pressed!" + System.currentTimeMillis());
                     this.buttonPressed[index] = true;
                     this.buttonPressed[otherIndex] = false;
+                    this.keepFirstImage = false;
                     this.noiseCounter[index] = 0;
-                    this.change1 = false;
-                } else {
-                    System.out.println("Highlight!" + System.currentTimeMillis());
-                    this.buttonHighlighted[index] = true;
-                    this.buttonHighlighted[otherIndex] = false;
                 }
-            } else if (change1 && (this.noiseCounter[index] < BUTTON_SENSITIVITY)) {
-                if (movement) {
-                    this.noiseCounter[index] = 0;
-                    this.change1 = false;
-                    System.out.println("Change was just noise!" + System.currentTimeMillis());
+            }
 
-                } else {
-                    this.noiseCounter[index]++;
-                    System.out.println("Counter increased!" + System.currentTimeMillis());
-
+            if (movement) {
+                if (this.noiseCounter[index] == 0) {
+                    this.keepFirstImage = true;
                 }
-            } else if (!change1 && movement) {
-                System.out.println("Change!" + System.currentTimeMillis());
-                this.change1 = true;
+                this.noiseCounter[index]++;
             }
         }
     }
 
     private void checkDynamicButton(int index, int btnX, int btnY) {
-        boolean movement = this.movementDetected(btnX, btnY);
-        if (change1 && (this.noiseCounter[index] >= BUTTON_SENSITIVITY)) {
-            if (movement) {
+        boolean movement = movementDetected(btnX, btnY);
+
+        if (this.noiseCounter[index] < BUTTON_SENSITIVITY && !movement) {
+            this.noiseCounter[index] = 0;
+
+        }
+
+        if (this.noiseCounter[index] >= BUTTON_SENSITIVITY) {
+            this.buttonHighlighted[index] = true;
+            System.out.println("Button highlighted!" + System.currentTimeMillis());
+
+            if (!movement) {
                 System.out.println("Button pressed!" + System.currentTimeMillis());
                 this.buttonHighlighted[index] = false;
                 this.buttonPressed[index] = true;
+                this.keepFirstImage = false;
                 this.noiseCounter[index] = 0;
-                this.change1 = false;
-            } else {
-                System.out.println("Highlight!" + System.currentTimeMillis());
-                this.buttonHighlighted[index] = true;
             }
-        } else if (change1 && (this.noiseCounter[index] < BUTTON_SENSITIVITY)) {
-            if (movement) {
-                this.noiseCounter[index] = 0;
-                this.change1 = false;
-                System.out.println("Change was just noise!" + System.currentTimeMillis());
+        }
 
-            } else {
-                this.noiseCounter[index]++;
-                System.out.println("Counter increased!" + System.currentTimeMillis());
-
+        if (movement) {
+            if (this.noiseCounter[index] == 0) {
+                this.keepFirstImage = true;
             }
-        } else if (!change1 && movement) {
-            System.out.println("Change!" + System.currentTimeMillis());
-            this.change1 = true;
+            this.noiseCounter[index]++;
         }
     }
 
@@ -166,7 +166,10 @@ public class MovementBrain implements Runnable {
     public void run() {
         while (true) {
             // set the two images needed for comparison
-            this.previousImageForDetection = this.currentImageForDetection;
+            if (!this.keepFirstImage) {
+                this.previousImageForDetection = this.currentImageForDetection;
+            }
+
             this.currentImageForDetection = this.parentOpticalModel.getCapturedImageFromEye();
 
             // check if button has been pressed or highlighted and notify OpticalModel
