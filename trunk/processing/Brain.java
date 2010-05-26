@@ -7,7 +7,7 @@ import Data.Point2D;
 import Data.Shape;
 import java.awt.image.BufferedImage;
 import java.util.Iterator;
-import slrt.OpticalModel;
+import SLRTr.SLRTModel;
 import java.util.Random;
 import java.util.Vector;
 
@@ -22,7 +22,7 @@ public class Brain implements Runnable {
      */
     private final Object lockObject = new Object();
 
-    private OpticalModel parentOpticalModel;
+    private SLRTModel parentOpticalModel;
 
     /* Having the sibling eye makes us able to get the captured image
      * and process it.
@@ -37,7 +37,7 @@ public class Brain implements Runnable {
     private int result;
     
 
-    public Brain(OpticalModel om) {
+    public Brain(SLRTModel om) {
         this.parentOpticalModel = om;
         
         this.capturedImageChanged = false;

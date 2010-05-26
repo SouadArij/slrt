@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import slrt.OpticalModel;
+import SLRTr.SLRTModel;
 
 /**
  *
@@ -28,7 +28,7 @@ public class MovementBrain implements Runnable {
     private static int NEXTWORD_BUTTON_Y = 25 * imageSizeSetting;
     private static int BUTTON_RADIUS = 20 * imageSizeSetting;
     private static int BUTTON_SENSITIVITY = 2;
-    OpticalModel parentOpticalModel;
+    SLRTModel parentOpticalModel;
     private BufferedImage previousImageForDetection;
     private BufferedImage currentImageForDetection;
     private int indexOfButtonPressed;
@@ -37,7 +37,7 @@ public class MovementBrain implements Runnable {
     private boolean[] buttonPressed = new boolean[4];
     private boolean keepFirstImage;
 
-    public MovementBrain(OpticalModel om) {
+    public MovementBrain(SLRTModel om) {
         this.parentOpticalModel = om;
         this.previousImageForDetection = this.parentOpticalModel.getCurrentImage();
         this.currentImageForDetection = this.parentOpticalModel.getCurrentImage();

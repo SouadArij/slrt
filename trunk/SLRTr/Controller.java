@@ -1,4 +1,4 @@
-package slrt;
+package SLRTr;
 
 
 import fxgui.GUIInterface;
@@ -15,7 +15,7 @@ import javafx.reflect.FXLocal.ObjectValue;
  */
 
 public class Controller {
-    private OpticalModel model;
+    private SLRTModel model;
     //private GUI view;
     private Thread opticalModelThread;
     private Thread viewThread;
@@ -30,14 +30,14 @@ public class Controller {
  */
     public Controller() {
 
-        this.model = new OpticalModel(this);
+        //this.model = new SLRTModel(this);
 
         //this.view = new GUI(model);
         gi.GUI(model);
         //this.view.setVisible(true);
        this.opticalModelThread = new Thread(this.model);
         //this.viewThread = new Thread(this.view);
-        gi.run();
+        gi.myRun();
       //  model.addObserver(gi);
       
         this.opticalModelThread.start();
