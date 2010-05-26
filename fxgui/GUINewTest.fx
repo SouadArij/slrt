@@ -16,7 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
-import slrt.OpticalModel;
+import SLRTr.SLRTModel;
 import java.util.Observable;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
@@ -24,7 +24,7 @@ import java.awt.image.BufferedImage;
                             
 public class GUINewTest extends GUIInterface {
 
-    var om: OpticalModel;
+    var om: SLRTModel;
     var currImg: Image;
     var highlightedButtons: Boolean[];
     var img1:Image = Image {url: "{__DIR__}icons/closefirst.png"};
@@ -52,7 +52,7 @@ public class GUINewTest extends GUIInterface {
 
 
     //function that simulates the java constructor
-    public override function GUI(model: OpticalModel) {
+    public override function GUI(model: SLRTModel) {
         this.om = model;
         this.imageButtons[0] = this.img4;
         this.imageButtons[1] = this.img10;
@@ -106,7 +106,7 @@ public class GUINewTest extends GUIInterface {
             return img;
          }
 
-    //function to return the boolean array that gives which button has been highlighted from the OpticalModel
+    //function to return the boolean array that gives which button has been highlighted from the SLRTModel
     function getHighlightedButtons():Boolean[]
     {
         var result:Boolean[];
@@ -134,7 +134,7 @@ public class GUINewTest extends GUIInterface {
 
     public override function myRun() {
 
-   //timeline to define the way FX gets its values from OpticalModel and updates the Scene
+   //timeline to define the way FX gets its values from SLRTModel and updates the Scene
    Timeline {
     repeatCount: Timeline.INDEFINITE
     keyFrames: [at(0s)
