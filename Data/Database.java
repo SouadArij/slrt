@@ -1,19 +1,22 @@
 package Data;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Vector;
+import javax.imageio.ImageIO;
 import javax.xml.stream.*;
+
 
 public class Database {
 
-    private static File LETTERS_XML_FILE = new File("db/letters.xml");
-    private static File WORDS_XML_FILE = new File("db/dictionary.xml");
+    private static File LETTERS_XML_FILE = new File("src/db/letters/letters.xml");
+    private static File WORDS_XML_FILE = new File("src/db/dictionary/dictionary.xml");
 
     private Vector<Letter> letters;
-    private Vector<Word> words;
+    private Vector<MyImage> words;
 
     public Database() {
         this.letters = null;
@@ -163,8 +166,17 @@ public class Database {
                     {
                         event = xmlStreamReader2.next();
                         imagePath = xmlStreamReader2.getText();
-                    }                    
-                    this.words.add(new Word(wordName, imagePath));
+                    }
+
+                    BufferedImage picture = null;
+
+                    try {
+                        picture = ImageIO.read(new File(imagePath));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    this.words.add(new MyImage(wordName, picture));
                 }
             }
         } catch (Exception ex) {
@@ -176,7 +188,7 @@ public class Database {
         return this.letters;
     }
 
-    public Vector<Word> getMyImages() {
+    public Vector<MyImage> getMyImages() {
         return this.words;
     }
 }

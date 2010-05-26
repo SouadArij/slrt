@@ -13,6 +13,7 @@ import javafx.reflect.FXLocal.ObjectValue;
  *
  * @author Nick
  */
+
 public class Controller {
     private OpticalModel model;
     //private GUI view;
@@ -24,7 +25,9 @@ public class Controller {
     private ObjectValue obj = (ObjectValue)instance.newInstance();
     public GUIInterface gi = (GUIInterface)obj.asObject();
 
-
+ /**
+ * Class contructor.
+ */
     public Controller() {
 
         this.model = new OpticalModel(this);

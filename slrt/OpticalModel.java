@@ -1,8 +1,10 @@
 package slrt;
 
-import xmlparser.Letter;
-import xmlparser.MyImage;
-import xmlparser.XMLParser;
+import Data.Database;
+import Data.Letter;
+import Data.MyImage;
+
+
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -34,7 +36,7 @@ public class OpticalModel extends Observable implements Runnable {
     private MovementBrain movementBrain;
     private Vector<Object> data;
     private BufferedImage currentImage;
-    private XMLParser xmlParser;
+    private Database xmlParser;
     private boolean changedImage;
     private Vector<Letter> letters = new Vector<Letter>();
     private Vector<MyImage> images = new Vector<MyImage>();
@@ -54,7 +56,7 @@ public class OpticalModel extends Observable implements Runnable {
     public OpticalModel(Controller c) {
         this.controller = c;
         data = new Vector<Object>();
-        this.xmlParser = new XMLParser();
+        this.xmlParser = new Database();
         this.XMLName = new File("src/db/letters/letters.xml");
         if (XMLName.exists()) {
             importDataFromXML();
@@ -73,7 +75,7 @@ public class OpticalModel extends Observable implements Runnable {
         this.eye.start();
         this.brainThread.start();
         this.movementBrainThread.start();
-        importDataFromXML();
+       // importDataFromXML();
         currentImage = getCapturedImageFromEye();
     }
 
@@ -98,6 +100,7 @@ public class OpticalModel extends Observable implements Runnable {
     }
 
     public void importDataFromXML() {
+        xmlParser.process();
         letters = xmlParser.getLetters();
         images = xmlParser.getMyImages();
     }
