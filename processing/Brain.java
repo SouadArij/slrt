@@ -1,4 +1,3 @@
-
 package processing;
 
 import Data.DBImage;
@@ -13,12 +12,28 @@ import java.util.Random;
 import java.util.Vector;
 
 public class Brain implements Runnable {
+
+    private static final double MINIMUM_RATE_NEEDED_TO_MATCH = 0.62;
+    private static final int MINIMUM_NUMBER_NEEDED_TO_MATCH = 0;
     
+    /* Synchronization purposes.
+     * Can not write <capturedImageChanged> by two different
+     * threads at the same time. Yes I'm smart :>
+     */
     private final Object lockObject = new Object();
 
     private OpticalModel parentOpticalModel;
+
+    /* Having the sibling eye makes us able to get the captured image
+     * and process it.
+     */
     private EyeWebcam siblingEye;
+
+    /* Shows whether the eye captured a new image or not
+     * If yes, we will process and compare that soon.
+     */
     private boolean capturedImageChanged;
+    
     private int result;
     
 
@@ -27,6 +42,10 @@ public class Brain implements Runnable {
         
         this.capturedImageChanged = false;
         this.result = -1;        
+    }
+
+    public void setSiblingEye(EyeWebcam e) {
+        this.siblingEye = e;
     }
 
     /*
@@ -52,29 +71,45 @@ public class Brain implements Runnable {
         int currentResult = this.result;
 
         while (true) {
+            
+            /*
+             * This is the normal sleep that relaxes the CPU a bit and
+             * lets other threads run fluently.
+             */
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
 
             if (this.capturedImageChanged) {
                 synchronized (this.lockObject) {
                     this.capturedImageChanged = false;
                 }
 
-
                 /*
                  * This is where the Algorithm method will be called (possibly other classes involded).
-                 * For now, instead a simple sleep will be called for simulation purposes.
+                 * For now, instead a simple sleep will be called as simulation.
+                 *
+                 *   try {
+                 *       Thread.sleep(5000);
+                 *   } catch (InterruptedException ex) {
+                 *       ex.printStackTrace();
+                 *   }
                  */
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
+                
                 /*
                  * Let's see.
                  * Processing and information aquiring part.
                  */
+                if (this.siblingEye == null) {
+                    continue;
+                }
                 BufferedImage capturedIm = this.siblingEye.getImage();
-                double ar = 0.0;
-                //double ar = (double) EyeWebcam.HAND_CUT_X2 - EyeWebcam.HAND_CUT_X1 / EyeWebcam.HAND_CUT_Y2 - EyeWebcam.HAND_CUT_Y1;
+                if (capturedIm == null) {
+                    continue;
+                }                
+                double ar = (double) EyeWebcam.HAND_CUT_X2 - EyeWebcam.HAND_CUT_X1 / EyeWebcam.HAND_CUT_Y2 - EyeWebcam.HAND_CUT_Y1;
                 int camImWidth, camImHeight;
                 if (ar < 1.333) {
                     camImWidth = (int) Math.round(DBImage.DB_IMAGE_HEIGHT * ar);
@@ -106,18 +141,29 @@ public class Brain implements Runnable {
                 int camShapeWidth = rightShape.getCenter().getX() - camLeftShapeCenter;
                 int camShapeHeight = bottomShape.getCenter().getY() - camTopShapeCenter;
 
-                /*
-                 * Comparation part.
+                /* Comparison part.
+                 * Similar to that sucky algorithm Iulia showed me.
+                 * (The algorithm is sucky not Iulia)
+                 * BTW talkin'bout Iulia M., not Iulia P. Cause Iulia P. _is_ forsure.
                  */
                 //Vector<Letter> letters = this.parentOpticalModel.getLetters();
                 Vector<Letter> letters = null;
+                if (letters == null) {
+                    continue;
+                }
                 Iterator<Letter> itlt = letters.iterator();
                 int letterIndex = 0;
+                int maxMatched = 0;
+                int maxMatchedIndex = 0;
                 while (itlt.hasNext()) {
                     Letter letter = itlt.next();
                     Vector<DBImage> dbIms = letter.getDBImages();
+                    if (dbIms == null) {
+                        continue;
+                    }
                     Iterator<DBImage> itim = dbIms.iterator();
                     int imIndex = 0;
+                    int nMatched = 0;
                     while (itim.hasNext()) {
                         DBImage dbIm = itim.next();
 
@@ -128,33 +174,37 @@ public class Brain implements Runnable {
                         int dbShapeHeight = dbIm.getShapeHeight();
                         boolean[][] transZoomedBoolIm = ImageAlgorithms.transZoomBoolIm(camBoolIm, dbLeftShapeCenter - camLeftShapeCenter, dbTopShapeCenter - camTopShapeCenter, (double) dbShapeWidth / camShapeWidth, (double) dbShapeHeight / camShapeHeight, camLeftShapeCenter, camTopShapeCenter);
 
-                        double match = ImageAlgorithms.compareTwoBoolIms(camBoolIm, dbBoolIm);
+                        double match = ImageAlgorithms.compareTwoBoolIms(transZoomedBoolIm, dbBoolIm);
+                        if (match >= Brain.MINIMUM_RATE_NEEDED_TO_MATCH) {
+                            nMatched++;
+                        }
 
                         imIndex++;
                     }
+                    if (nMatched > maxMatched) {
+                        maxMatched = nMatched;
+                        maxMatchedIndex = letterIndex;
+                    }
+
                     letterIndex++;
                 }
 
-                
-                //dbIm = new DBImage(boolIm, shapeWidth, shapeHeight, camLeftShapeCenter, camTopShapeCenter, angles);
-              
-                currentResult = r.nextInt(100);
+                /* Evaluating the comparison.
+                 */
+                if (maxMatched > Brain.MINIMUM_NUMBER_NEEDED_TO_MATCH) {
+                    currentResult = maxMatchedIndex;
+                } else {
+                    currentResult = -1;
+                }                
+
+                /* For testing:
+                 * currentResult = r.nextInt(100);
+                 */
             }
             
-            if (currentResult != this.result) {
-                
+            if (currentResult != this.result) {                
                 this.result = currentResult;
                 this.parentOpticalModel.setBrainResultChanged();
-            }
-
-            /*
-             * This is the normal sleep that relaxes the CPU a bit and
-             * lets other threads process fluently.
-             */
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
             }
         }
     }    
