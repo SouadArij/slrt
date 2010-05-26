@@ -123,30 +123,32 @@ public class MovementBrain implements Runnable {
 
     private void checkDynamicButton(int index, int btnX, int btnY) {
         boolean movement = movementDetected(btnX, btnY);
+        int otherIndex = Math.abs(index - 3);
+        if (this.buttonPressed[0] && !this.buttonHighlighted[otherIndex] && !this.buttonPressed[otherIndex]) {
+            if (movement) {
+                if (this.noiseCounter[index] == 0) {
+                    this.keepFirstImage = true;
+                }
+                this.noiseCounter[index]++;
+            }
 
-        if (this.noiseCounter[index] < BUTTON_SENSITIVITY && !movement) {
-            this.noiseCounter[index] = 0;
-
-        }
-
-        if (this.noiseCounter[index] >= BUTTON_SENSITIVITY) {
-            this.buttonHighlighted[index] = true;
-            System.out.println("Button highlighted!" + System.currentTimeMillis());
-
-            if (!movement) {
-                System.out.println("Button pressed!" + System.currentTimeMillis());
-                this.buttonHighlighted[index] = false;
-                this.buttonPressed[index] = true;
-                this.keepFirstImage = false;
+            if (this.noiseCounter[index] < BUTTON_SENSITIVITY && !movement) {
                 this.noiseCounter[index] = 0;
-            }
-        }
 
-        if (movement) {
-            if (this.noiseCounter[index] == 0) {
-                this.keepFirstImage = true;
             }
-            this.noiseCounter[index]++;
+
+            if (this.noiseCounter[index] >= BUTTON_SENSITIVITY) {
+                this.buttonHighlighted[index] = true;
+                System.out.println("Button highlighted!" + System.currentTimeMillis());
+
+                if (!movement) {
+                    System.out.println("Button pressed!" + System.currentTimeMillis());
+                    this.buttonHighlighted[index] = false;
+                    this.buttonPressed[index] = true;
+                    this.keepFirstImage = false;
+                    this.noiseCounter[index] = 0;
+                }
+            }
         }
     }
 
