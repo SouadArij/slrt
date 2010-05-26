@@ -11,7 +11,7 @@ import javafx.reflect.FXLocal.Context;
 import javafx.reflect.FXLocal.ObjectValue;
 /**
  *
- * @author Nick
+ * DEPRECATED
  */
 
 public class Controller {
