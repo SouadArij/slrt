@@ -94,7 +94,14 @@ public class MovementBrain implements Runnable {
         if (!(this.buttonPressed[index]) && this.buttonPressed[otherIndex]) {
             boolean movement = movementDetected(btnX, btnY);
 
-            if (this.noiseCounter[index] < BUTTON_SENSITIVITY && !movement) {
+            if (movement) {
+                if (this.noiseCounter[index] == 0) {
+                    this.keepFirstImage = true;
+                }
+                this.noiseCounter[index]++;
+            }
+
+            if (!movement && this.noiseCounter[index] < BUTTON_SENSITIVITY) {
                 this.noiseCounter[index] = 0;
             }
 
@@ -110,13 +117,6 @@ public class MovementBrain implements Runnable {
                     this.keepFirstImage = false;
                     this.noiseCounter[index] = 0;
                 }
-            }
-
-            if (movement) {
-                if (this.noiseCounter[index] == 0) {
-                    this.keepFirstImage = true;
-                }
-                this.noiseCounter[index]++;
             }
         }
     }
