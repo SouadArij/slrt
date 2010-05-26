@@ -1,6 +1,6 @@
 package processing;
 
-import slrt.OpticalModel;
+import SLRTr.SLRTModel;
 import com.lti.civil.CaptureDeviceInfo;
 import com.lti.civil.CaptureException;
 import com.lti.civil.CaptureObserver;
@@ -28,13 +28,13 @@ public class EyeWebcam {
     public static final int HAND_CUT_X2 = 347;
     public static final int HAND_CUT_Y2 = 310;
 
-    private OpticalModel parentOpticalModel;
+    private SLRTModel parentOpticalModel;
     private BufferedImage image;
     private Brain siblingBrain;
     private CaptureStream captureStream;
     private CaptureSystem captureSystem;
 
-    public EyeWebcam(OpticalModel om, Brain br) {
+    public EyeWebcam(SLRTModel om, Brain br) {
         this.siblingBrain = br;
         this.parentOpticalModel = om;
         this.image = null;

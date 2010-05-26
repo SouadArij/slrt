@@ -132,7 +132,7 @@ public class GUINewTest extends GUIInterface {
     }
 
 
-    public override function run() {
+    public override function myRun() {
 
    //timeline to define the way FX gets its values from OpticalModel and updates the Scene
    Timeline {

@@ -1,4 +1,4 @@
-package slrt;
+package SLRTr;
 
 import Data.Database;
 import Data.Letter;
@@ -20,16 +20,8 @@ import java.util.Observable;
 import java.util.Random;
 import processing.MovementBrain;
 import xmlparser.XMLWrite;
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author Nick
- */
-public class OpticalModel extends Observable implements Runnable {
+public class SLRTModel extends Observable implements Runnable {
 
     private EyeWebcam eye;
     private Brain brain;
@@ -41,8 +33,7 @@ public class OpticalModel extends Observable implements Runnable {
     private Vector<Letter> letters = new Vector<Letter>();
     private Vector<MyImage> images = new Vector<MyImage>();
     private boolean newResultFromBrain;
-    private boolean newResultFromMovementBrain;
-    private Controller controller;
+    private boolean newResultFromMovementBrain;    
     private Thread brainThread;
     private Thread movementBrainThread;
     private int resultFromBrain;
@@ -53,8 +44,7 @@ public class OpticalModel extends Observable implements Runnable {
     private File XMLName;
     private boolean  displayedWordCorrect;
 
-    public OpticalModel(Controller c) {
-        this.controller = c;
+    public SLRTModel() {
         data = new Vector<Object>();
         this.xmlParser = new Database();
         this.XMLName = new File("src/db/letters/letters.xml");

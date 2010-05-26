@@ -2,21 +2,13 @@ package fxgui;
 
 import java.awt.image.BufferedImage;
 import java.util.Observer;
-import slrt.OpticalModel;
+import SLRTr.SLRTModel;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author Trishk
- */
 public interface GUIInterface extends Observer {
     //public void getImage();
-    public void run();
-    public void GUI(OpticalModel m);
+    public void myRun();
+    public void GUI(SLRTModel m);
 
    // public void setDisplayedString(String displayedWord, boolean b);
 
