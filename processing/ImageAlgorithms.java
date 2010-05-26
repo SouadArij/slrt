@@ -99,7 +99,7 @@ public class ImageAlgorithms {
         return dIm;
     }
 
-    public static GrayImageAndHistogram grayIntIm2contourImAndHistogram(int[][] grayIntIm, int radius) {
+    public static GrayImageAndHistogram grayIntIm2ContourImAndHistogram(int[][] grayIntIm, int radius) {
 
         int wi = grayIntIm[0].length, he = grayIntIm.length;
         int[][] contourIm = new int[he][wi];
@@ -163,7 +163,7 @@ public class ImageAlgorithms {
         return i;
     }
 
-    public static boolean[][] grayIntIm2boolIm(int[][] grayIntIm, int treshold) {
+    public static boolean[][] grayIntIm2BoolIm(int[][] grayIntIm, int treshold) {
         int wi = grayIntIm[0].length, he = grayIntIm.length;
         boolean[][] boolIm = new boolean[he][wi];
         int sGray;
@@ -431,7 +431,7 @@ public class ImageAlgorithms {
         return reducedShape;
     }
 
-    public static boolean[][] shape2boolIm(Shape shape, int wi, int he) {
+    public static boolean[][] shape2BoolIm(Shape shape, int wi, int he) {
         Iterator<Point2D> itsh = shape.iterator();
         Point2D pt;
 
@@ -461,4 +461,147 @@ public class ImageAlgorithms {
 
         return buffIm;
     }
+
+    public static boolean[][] transZoomBoolIm(boolean[][] sIm, int tx, int ty, double zx, double zy, int cx, int cy) {
+
+        int wi = sIm[0].length, he = sIm.length;
+        boolean[][] dIm = new boolean[he][wi];
+        int sxi, syi, dxi, dyi;
+        double dx, dy, sxr, syr;
+
+        zx = 1 / zx;
+        zy = 1 / zy;
+
+        // down and right
+        syr = cy;
+        syi = cy;
+        dyi = cy + ty;
+        while ((dyi >= 0) && (dyi < he)) {
+            sxr = cx;
+            sxi = cx;
+            dxi = cx + tx;
+            while ((dxi >= 0) && (dxi < wi)) {
+                if ((sxi >= 0) && (sxi < wi) && (syi >= 0) && (syi < he)) {
+                    dIm[dyi][dxi] = sIm[syi][sxi];
+                } else {
+                    dIm[dyi][dxi] = false;
+                }
+
+                sxr += zx;
+                sxi = (int) sxr;
+                dxi++;
+            }
+            syr += zy;
+            syi = (int) syr;
+            dyi++;
+        }
+
+        // down and left
+        syr = cy;
+        syi = cy;
+        dyi = cy + ty;
+        while ((dyi >= 0) && (dyi < he)) {
+            sxr = cx;
+            sxi = cx;
+            dxi = cx + tx;
+            while ((dxi >= 0) && (dxi < wi)) {
+                if ((sxi >= 0) && (sxi < wi) && (syi >= 0) && (syi < he)) {
+                    dIm[dyi][dxi] = sIm[syi][sxi];
+                } else {
+                    dIm[dyi][dxi] = false;
+                }
+
+                sxr -= zx;
+                sxi = (int) (sxr + 1.0);
+                dxi--;
+            }
+            syr += zy;
+            syi = (int) syr;
+            dyi++;
+        }
+
+        // up and right
+        syr = cy;
+        syi = cy;
+        dyi = cy + ty;
+        while ((dyi >= 0) && (dyi < he)) {
+            sxr = cx;
+            sxi = cx;
+            dxi = cx + tx;
+            while ((dxi >= 0) && (dxi < wi)) {
+                if ((sxi >= 0) && (sxi < wi) && (syi >= 0) && (syi < he)) {
+                    dIm[dyi][dxi] = sIm[syi][sxi];
+                } else {
+                    dIm[dyi][dxi] = false;
+                }
+
+                sxr += zx;
+                sxi = (int) sxr;
+                dxi++;
+            }
+            syr -= zy;
+            syi = (int) (syr + 1.0);
+            dyi--;
+        }
+
+        // up and left
+        syr = cy;
+        syi = cy;
+        dyi = cy + ty;
+        while ((dyi >= 0) && (dyi < he)) {
+            sxr = cx;
+            sxi = cx;
+            dxi = cx + tx;
+            while ((dxi >= 0) && (dxi < wi)) {
+                if ((sxi >= 0) && (sxi < wi) && (syi >= 0) && (syi < he)) {
+                    dIm[dyi][dxi] = sIm[syi][sxi];
+                } else {
+                    dIm[dyi][dxi] = false;
+                }
+
+                sxr -= zx;
+                sxi = (int) (sxr + 1.0);
+                dxi--;
+            }
+            syr -= zy;
+            syi = (int) (syr + 1.0);
+            dyi--;
+        }
+
+        return dIm;
+    }
+
+    public static double compareTwoBoolIms(boolean[][] aIm, boolean[][] bIm) {
+        if ((aIm == null) || (bIm == null)) {
+            return 0.0;
+        }
+        if ((aIm[0] == null) || (bIm[0] == null)) {
+            return 0.0;
+        }
+        if ((aIm.length != bIm.length) || (aIm[0].length != bIm[0].length)) {
+            return 0.0;
+        }
+        
+        int wi = aIm[0].length, he = aIm.length;
+        int x, y;
+        int commonArea = 0;
+        int aArea = 0;
+
+        for (y = 0; y < he; y++) {
+            for (x = 0; x < wi; x++) {
+                boolean a = aIm[y][x];
+                boolean b = bIm[y][x];
+                if (a) {
+                    aArea++;
+                }
+                if (a && b) {                    
+                    commonArea++;
+                }
+            }
+        }
+
+        double match = (double) commonArea / aArea;
+        return match;
+    }
+
 }

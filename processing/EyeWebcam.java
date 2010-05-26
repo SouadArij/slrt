@@ -23,6 +23,11 @@ import java.util.logging.Logger;
 
 public class EyeWebcam {
 
+    public static final int HAND_CUT_X1 = 26;
+    public static final int HAND_CUT_Y1 = 110;
+    public static final int HAND_CUT_X2 = 347;
+    public static final int HAND_CUT_Y2 = 310;
+
     private OpticalModel parentOpticalModel;
     private BufferedImage image;
     private Brain siblingBrain;

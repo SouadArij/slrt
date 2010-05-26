@@ -3,11 +3,14 @@ package processing;
 
 import Data.DBImage;
 import Data.GrayImageAndHistogram;
+import Data.Letter;
 import Data.Point2D;
 import Data.Shape;
 import java.awt.image.BufferedImage;
+import java.util.Iterator;
 import slrt.OpticalModel;
 import java.util.Random;
+import java.util.Vector;
 
 public class Brain implements Runnable {
     
@@ -67,9 +70,11 @@ public class Brain implements Runnable {
                 }
                 /*
                  * Let's see.
+                 * Processing and information aquiring part.
                  */
                 BufferedImage capturedIm = this.siblingEye.getImage();
-                double ar = (double) GUINewTest.CUT_SIZE_SX2 - GUINewTest.CUT_SIZE_SX1 / CUT_SIZE_SY2 - CUT_SIZE_SY1;
+                double ar = 0.0;
+                //double ar = (double) EyeWebcam.HAND_CUT_X2 - EyeWebcam.HAND_CUT_X1 / EyeWebcam.HAND_CUT_Y2 - EyeWebcam.HAND_CUT_Y1;
                 int camImWidth, camImHeight;
                 if (ar < 1.333) {
                     camImWidth = (int) Math.round(DBImage.DB_IMAGE_HEIGHT * ar);
@@ -78,33 +83,60 @@ public class Brain implements Runnable {
                     camImWidth = DBImage.DB_IMAGE_WIDTH;
                     camImHeight = (int) Math.round(DBImage.DB_IMAGE_WIDTH / ar);
                 }
-                int[][] cutResizedGrayIntIm = ImageAlgorithms.buffIm2cutGrayResizedIntIm(capturedIm, GUINewTest.CUT_SIZE_SX1, GUINewTest.CUT_SIZE_SY1, GUINewTest.CUT_SIZE_SX2, GUINewTest.CUT_SIZE_SY2, camImWidth, camImHeight);              
-                GrayImageAndHistogram contourIntImAndHistogram = ImageAlgorithms.grayIntIm2contourImAndHistogram(resizedGrayIntIm, CONTOUR_POWER);
+                int[][] cutResizedGrayIntIm = ImageAlgorithms.buffIm2CutGrayResizedIntIm(capturedIm, EyeWebcam.HAND_CUT_X1, EyeWebcam.HAND_CUT_Y1, EyeWebcam.HAND_CUT_X2, EyeWebcam.HAND_CUT_Y2, camImWidth, camImHeight);
+                GrayImageAndHistogram contourIntImAndHistogram = ImageAlgorithms.grayIntIm2ContourImAndHistogram(cutResizedGrayIntIm, DBImage.CONTOUR_POWER);
                 int[][] contourIntIm = contourIntImAndHistogram.getGrayImage();
                 int[] histogram = contourIntImAndHistogram.getHistogram();
                 int treshold = ImageAlgorithms.computeNecessaryThreshold(DBImage.WHITE_PROPORTION, histogram, camImWidth * camImHeight);
-                boolean[][] boolIm = ImageAlgorithms.grayIntIm2boolIm(contourIntIm, treshold);
-                Shape greatestShape = ImageAlgorithms.findGreatestShape(boolIm);
+                boolean[][] camBoolIm = ImageAlgorithms.grayIntIm2BoolIm(contourIntIm, treshold);
+                Shape greatestShape = ImageAlgorithms.findGreatestShape(camBoolIm);
 
                 Point2D leftMostPoint = greatestShape.getLeftMostPoint();
                 Point2D rightMostPoint = greatestShape.getRightMostPoint();
                 Point2D bottomMostPoint = greatestShape.getBottomMostPoint();
                 Point2D topMostPoint = greatestShape.getTopMostPoint();
 
-                leftShape = ImageAlgorithms.reduceShapeHVAreaLimit(greatestShape, leftMostPoint, HV_THINNESS, true, HV_AREA_LIMIT);
-                rightShape = ImageAlgorithms.reduceShapeHVAreaLimit(greatestShape, rightMostPoint, HV_THINNESS, true, HV_AREA_LIMIT);
-                topShape = ImageAlgorithms.reduceShapeHVAreaLimit(greatestShape, topMostPoint, HV_THINNESS, false, HV_AREA_LIMIT);
-                bottomShape = ImageAlgorithms.reduceShapeHVAreaLimit(greatestShape, bottomMostPoint, HV_THINNESS, false, HV_AREA_LIMIT);
+                Shape leftShape = ImageAlgorithms.reduceShapeHVAreaLimit(greatestShape, leftMostPoint, DBImage.HV_THINNESS, true, DBImage.HV_AREA_LIMIT);
+                Shape rightShape = ImageAlgorithms.reduceShapeHVAreaLimit(greatestShape, rightMostPoint, DBImage.HV_THINNESS, true, DBImage.HV_AREA_LIMIT);
+                Shape topShape = ImageAlgorithms.reduceShapeHVAreaLimit(greatestShape, topMostPoint, DBImage.HV_THINNESS, false, DBImage.HV_AREA_LIMIT);
+                Shape bottomShape = ImageAlgorithms.reduceShapeHVAreaLimit(greatestShape, bottomMostPoint, DBImage.HV_THINNESS, false, DBImage.HV_AREA_LIMIT);
 
-                leftMostCoord = leftMostPoint.getX();
-                topMostCoord = topMostPoint.getY();
-                leftShapeCenter = leftShape.getCenter().getX();
-                topShapeCenter = topShape.getCenter().getY();
+                int camLeftShapeCenter = leftShape.getCenter().getX();
+                int camTopShapeCenter = topShape.getCenter().getY();
+                int camShapeWidth = rightShape.getCenter().getX() - camLeftShapeCenter;
+                int camShapeHeight = bottomShape.getCenter().getY() - camTopShapeCenter;
 
-                shapeWidth = rightShape.getCenter().getX() - leftShapeCenter;
-                shapeHeight = bottomShape.getCenter().getY() - topShapeCenter;
+                /*
+                 * Comparation part.
+                 */
+                //Vector<Letter> letters = this.parentOpticalModel.getLetters();
+                Vector<Letter> letters = null;
+                Iterator<Letter> itlt = letters.iterator();
+                int letterIndex = 0;
+                while (itlt.hasNext()) {
+                    Letter letter = itlt.next();
+                    Vector<DBImage> dbIms = letter.getDBImages();
+                    Iterator<DBImage> itim = dbIms.iterator();
+                    int imIndex = 0;
+                    while (itim.hasNext()) {
+                        DBImage dbIm = itim.next();
 
-                dbIm = new DBImage(boolIm, shapeWidth, shapeHeight, leftShapeCenter, topShapeCenter, angles);
+                        boolean[][] dbBoolIm = dbIm.getRaster();
+                        int dbLeftShapeCenter = dbIm.getLeftShapeCenter();
+                        int dbTopShapeCenter = dbIm.getTopShapeCenter();
+                        int dbShapeWidth = dbIm.getShapeWidth();
+                        int dbShapeHeight = dbIm.getShapeHeight();
+                        boolean[][] transZoomedBoolIm = ImageAlgorithms.transZoomBoolIm(camBoolIm, dbLeftShapeCenter - camLeftShapeCenter, dbTopShapeCenter - camTopShapeCenter, (double) dbShapeWidth / camShapeWidth, (double) dbShapeHeight / camShapeHeight, camLeftShapeCenter, camTopShapeCenter);
+
+                        double match = ImageAlgorithms.compareTwoBoolIms(camBoolIm, dbBoolIm);
+
+                        imIndex++;
+                    }
+                    letterIndex++;
+                }
+
+                
+                //dbIm = new DBImage(boolIm, shapeWidth, shapeHeight, camLeftShapeCenter, camTopShapeCenter, angles);
               
                 currentResult = r.nextInt(100);
             }
