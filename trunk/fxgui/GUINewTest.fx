@@ -118,6 +118,7 @@ public class GUINewTest extends GUIInterface {
 
     }
 
+    //gets fillColor for text on screen: blue if correct and some kind of red when wrong
     function getFillColor():Color {
 
         if (this.correct == true) {
@@ -340,15 +341,15 @@ public class GUINewTest extends GUIInterface {
     }
 
         var downRect : Rectangle = Rectangle {
-        y: 515
+        y: 520
         height: 40
         width: 646
         fill: LinearGradient {
-            startX: 0.0, startY: 0.0, endX: 0.0, endY: 1.0
+            startX: 0.0, startY: 1.0, endX: 0.0, endY: 0.0
             proportional: true
             stops: [
-                Stop { offset: 0.5 color: Color.BLACK },
-                Stop { offset: 0.9 color: Color.BLACK }
+                Stop { offset: 0.0 color: Color.DARKSLATEGREY },
+                Stop { offset: 0.5 color: Color.BLACK }
             ]
         }
     }
@@ -480,6 +481,9 @@ public class GUINewTest extends GUIInterface {
         
     }
 
+    /*var menuBar: MenuBar = MenuBar {
+
+    }*/
 
 
     var scene : Scene = Scene {
