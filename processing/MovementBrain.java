@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package processing;
 
 import java.awt.Color;
@@ -10,10 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import SLRTr.SLRTModel;
 
-/**
- *
- * @author Trishk
- */
 public class MovementBrain implements Runnable {
 
     private static int imageSizeSetting = 1;
@@ -28,7 +20,7 @@ public class MovementBrain implements Runnable {
     private static int NEXTWORD_BUTTON_Y = 25 * imageSizeSetting;
     private static int BUTTON_RADIUS = 20 * imageSizeSetting;
     private static int BUTTON_SENSITIVITY = 2;
-    SLRTModel parentOpticalModel;
+    SLRTModel parentModel;
     private BufferedImage previousImageForDetection;
     private BufferedImage currentImageForDetection;
     private int indexOfButtonPressed;
@@ -37,10 +29,10 @@ public class MovementBrain implements Runnable {
     private boolean[] buttonPressed = new boolean[4];
     private boolean keepFirstImage;
 
-    public MovementBrain(SLRTModel om) {
-        this.parentOpticalModel = om;
-        this.previousImageForDetection = this.parentOpticalModel.getCurrentImage();
-        this.currentImageForDetection = this.parentOpticalModel.getCurrentImage();
+    public MovementBrain(SLRTModel m) {
+        this.parentModel = m;
+        this.previousImageForDetection = this.parentModel.getCapturedImageFromEye();
+        this.currentImageForDetection = this.parentModel.getCapturedImageFromEye();
         this.indexOfButtonPressed = 0;
         for (int i = 0; i < 4; i++) {
             this.buttonHighlighted[i] = false;
@@ -150,7 +142,7 @@ public class MovementBrain implements Runnable {
     }
 
     public void notifyOpticalModel() {
-        parentOpticalModel.setNewResultFromMovementBrain(true);
+        parentModel.setNewResultFromMovementBrain(true);
     }
 
     public int getIndexOfButtonPushed() {
@@ -169,7 +161,7 @@ public class MovementBrain implements Runnable {
                 this.previousImageForDetection = this.currentImageForDetection;
             }
 
-            this.currentImageForDetection = this.parentOpticalModel.getCapturedImageFromEye();
+            this.currentImageForDetection = this.parentModel.getCapturedImageFromEye();
 
             // check if button has been pressed or highlighted and notify OpticalModel
             if (this.previousImageForDetection != null && this.currentImageForDetection != null) {

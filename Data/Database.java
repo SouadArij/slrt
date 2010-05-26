@@ -7,24 +7,24 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.imageio.ImageIO;
-import javax.xml.stream.*;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
+
 
 
 public class Database {
 
-    private static File LETTERS_XML_FILE = new File("src/db/letters/letters.xml");
-    private static File WORDS_XML_FILE = new File("src/db/dictionary/dictionary.xml");
+    private static final File LETTERS_XML_FILE = new File("src/db/letters/letters.xml");
+    private static final File WORDS_XML_FILE = new File("src/db/dictionary/dictionary.xml");
 
     private Vector<Letter> letters;
-    private Vector<MyImage> words;
+    private Vector<Word> words;
 
     public Database() {
-        this.letters = null;
-        this.words = null;
     }
 
-    /*
-     * Parse XMLs of Letters and Words.
+    /* Parse XMLs of Letters and Words.
      * Then load preprocessed DB images from disk to memory.
      */
     public void load() {
@@ -49,51 +49,51 @@ public class Database {
         }
     }
 
-    /*
-     * Parse XMLs of Letters and Words.
+    /* Parse XMLs of Letters and Words.
      * Then process bmp/jpg images from disk and load the processed images to memory.
      */
-    public void process() {
-        Letter letter = null;
-        File dirPath;
-        File[] files;
-        Vector<DBImage> dbImages = new Vector();
-        int i;
-
+    public void process() {                                        
         this.XMLparseLetters();
         this.XMLparseWords();
 
-        Iterator<Letter> itlt = letters.iterator();
+        if (this.letters == null) {
+            System.out.format("Error: Database.letters = null\n");
+            return;
+        }
+
+        Iterator<Letter> itlt = this.letters.iterator();
         while (itlt.hasNext()) {
-            letter = itlt.next();
-            dirPath = letter.getDirPath();
-            files = dirPath.listFiles(new DBImageFileFilter());
-            for (i = 0; i < files.length; i++) {
+            Letter letter = itlt.next();
+            File dirPath = letter.getDirPath();
+            File[] files = dirPath.listFiles(new DBImageFileFilter());
+            Vector<DBImage> dbImages = new Vector();
+            for (int i = 0; i < files.length; i++) {
                 dbImages.add(DBImage.loadRawFromDisk(files[i]));
             }
             letter.setDBImages(dbImages);
         }
     }
 
-    /*
-     * Save processed DB images that are in memory to disk.
+    /* Save processed DB images that are in memory to disk.
      */
     public void save() {
-        Letter letter = null;
-        DBImage dbIm;
-        File file;
-        int i = 0;
-        File dirPath;
+        if (this.letters == null) {
+            System.out.format("Error: Database.letters = null\n");
+            return;
+        }
 
         Iterator<Letter> itlt = letters.iterator();
         while (itlt.hasNext()) {
-            letter = itlt.next();
-            dirPath = letter.getDirPath();
+            Letter letter = itlt.next();
+            File dirPath = letter.getDirPath();
             Iterator<DBImage> itim = letter.getDBImages().iterator();
+            int i = 0;
             while (itim.hasNext()) {
-                dbIm = itim.next();
-                file = new File(dirPath.getPath() + "/" + i + "dbim");
+                DBImage dbIm = itim.next();
+                File file = new File(dirPath.getPath() + "/" + i + "dbim");
                 dbIm.saveToDisk(file);
+
+                i++;
             }            
         }
     }
@@ -140,7 +140,7 @@ public class Database {
 
     private void XMLparseWords() {
         String wordName = null;
-        String imagePath = null;
+        File imagePath = null;
 
         this.words = new Vector();
         try {
@@ -165,18 +165,20 @@ public class Database {
                     if (xmlStreamReader2.getLocalName().equals("path"))
                     {
                         event = xmlStreamReader2.next();
-                        imagePath = xmlStreamReader2.getText();
+                        imagePath = new File(xmlStreamReader2.getText());
                     }
 
+                    /* Huni: Why do you open and read the image?
+                     * 
                     BufferedImage picture = null;
-
                     try {
                         picture = ImageIO.read(new File(imagePath));
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    this.words.add(new MyImage(wordName, picture));
+                     */
+                    this.words.add(new Word(wordName, imagePath));
                 }
             }
         } catch (Exception ex) {
@@ -188,7 +190,7 @@ public class Database {
         return this.letters;
     }
 
-    public Vector<MyImage> getMyImages() {
+    public Vector<Word> getWords() {
         return this.words;
     }
 }
