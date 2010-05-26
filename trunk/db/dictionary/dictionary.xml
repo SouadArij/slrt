@@ -1,1 +1,10 @@
-<dictionary><word><name>dog </name><path>src/db/dictionary/dog .jpg</path></word><word><name>cat</name><path>src/db/dictionary/cat.jpg</path></word></dictionary>
+<dictionary>
+    <word>
+        <name>dog </name>
+        <path>src/db/dictionary/dog.jpg</path>
+    </word>
+    <word>
+        <name>cat</name>
+        <path>src/db/dictionary/cat.jpg</path>
+    </word>
+</dictionary>
