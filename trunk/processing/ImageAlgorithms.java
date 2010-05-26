@@ -1,9 +1,8 @@
-package Brain;
+package processing;
 
 import Data.GrayImageAndHistogram;
 import Data.Point2D;
 import Data.Shape;
-import Data.ShapeAndBoolImage;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
