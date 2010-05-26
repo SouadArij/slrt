@@ -28,15 +28,14 @@ public class EyeWebcam {
     public static final int HAND_CUT_X2 = 347;
     public static final int HAND_CUT_Y2 = 310;
 
-    private SLRTModel parentOpticalModel;
+    private SLRTModel parentModel;
     private BufferedImage image;
     private Brain siblingBrain;
     private CaptureStream captureStream;
     private CaptureSystem captureSystem;
 
-    public EyeWebcam(SLRTModel om, Brain br) {
-        this.siblingBrain = br;
-        this.parentOpticalModel = om;
+    public EyeWebcam(SLRTModel om) {        
+        this.parentModel = om;
         this.image = null;
 
         CaptureSystemFactory captureFactory = DefaultCaptureSystemFactorySingleton.instance();
@@ -59,6 +58,10 @@ public class EyeWebcam {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void setSiblingBrain(Brain b) {
+        this.siblingBrain = b;
     }
 
     public void start() {
@@ -89,7 +92,7 @@ public class EyeWebcam {
 
     public void notifyWaitingComponents() {
         siblingBrain.setCapturedImageChanged();
-        parentOpticalModel.setChanged(true);
+        parentModel.setChanged(true);
 
     }
 

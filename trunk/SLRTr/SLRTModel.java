@@ -2,36 +2,30 @@ package SLRTr;
 
 import Data.Database;
 import Data.Letter;
-import Data.MyImage;
-
-
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
+import Data.Word;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.Vector;
 import javax.imageio.ImageIO;
 import processing.Brain;
 import processing.EyeWebcam;
-import java.awt.Color;
 import java.util.Observable;
 import java.util.Random;
 import processing.MovementBrain;
-import xmlparser.XMLWrite;
 
 public class SLRTModel extends Observable implements Runnable {
 
     private EyeWebcam eye;
     private Brain brain;
     private MovementBrain movementBrain;
+
+    private Database database;
+    
     private Vector<Object> data;
-    private BufferedImage currentImage;
-    private Database xmlParser;
-    private boolean changedImage;
-    private Vector<Letter> letters = new Vector<Letter>();
-    private Vector<MyImage> images = new Vector<MyImage>();
+    private BufferedImage currentImage;       
+    private boolean imageChanged;
+    //private Vector<Letter> letters = new Vector<Letter>();
+    //private Vector<MyImage> images = new Vector<MyImage>();
     private boolean newResultFromBrain;
     private boolean newResultFromMovementBrain;    
     private Thread brainThread;
@@ -40,67 +34,96 @@ public class SLRTModel extends Observable implements Runnable {
     private Boolean[] resultFromMovementBrain;
     private String displayedWord="JeG";
     private String currentWord="JeGaaaa";
-    private BufferedImage wordImage;
-    private File XMLName;
+    private BufferedImage wordImage;    
     private boolean  displayedWordCorrect;
 
     public SLRTModel() {
         data = new Vector<Object>();
-        this.xmlParser = new Database();
+
+        this.database = new Database();
+        this.loadPreprocessedImages2DB();
+
+        /* Don't get this, but I'm sure this doesn't fit here in the constructor.
+         * Do this in a separate function. And do this only on specific request.
+         *
         this.XMLName = new File("src/db/letters/letters.xml");
-        if (XMLName.exists()) {
-            importDataFromXML();
+        if (XMLName.exists()) {            
         } else {
             XMLWrite xmlWriter = new XMLWrite();
             xmlWriter.generateXMLLetters();
             xmlWriter.generateXMLDictionary();
         }
+         */
+        
         this.brain = new Brain(this);
-        this.wordImage = this.getNextImage();
-        //this.controller.gi.setWordImage(this.wordImage);
+        this.eye = new EyeWebcam(this);
+        this.brain.setSiblingEye(this.eye);
+        this.eye.setSiblingBrain(this.brain);
         this.movementBrain = new MovementBrain(this);
-        this.eye = new EyeWebcam(this, brain);
-        this.brainThread = new Thread(this.brain);
-        this.movementBrainThread = new Thread(this.movementBrain);
+
         this.eye.start();
+        this.brainThread = new Thread(this.brain);
         this.brainThread.start();
+        this.movementBrainThread = new Thread(this.movementBrain);
         this.movementBrainThread.start();
+        
+        this.wordImage = this.getNextWordImage();
+        //this.controller.gi.setWordImage(this.wordImage);
+        
        // importDataFromXML();
         currentImage = getCapturedImageFromEye();
     }
 
-    public Vector<MyImage> getImages() {
-        return images;
+    public Vector<Word> getWords() {
+        return this.database.getWords();
     }
 
-    public int getImagesNumber() {
-        return images.size();
+    public Vector<Letter> getLetters() {
+        return this.database.getLetters();
     }
 
     public BufferedImage getCapturedImageFromEye() {
         return eye.getImage();
     }
 
-    public Boolean[] getResultFromMovementBrain(){
+    public Boolean[] getResultFromMovementBrain() {
         return this.resultFromMovementBrain;
     }
 
-        public BufferedImage getCurrentImage() {
-        return this.currentImage;
+    public int getResultFromBrain() {
+        return this.brain.getResult();
     }
 
-    public void importDataFromXML() {
-        xmlParser.process();
-        letters = xmlParser.getLetters();
-        images = xmlParser.getMyImages();
+    /* Huni: Why this if we have getCapturedImageFromEye() ?
+     *
+    public BufferedImage getCurrentImage() {
+        return this.currentImage;
+    }
+     */
+
+    /* Load all .dbim images in the <database>
+     * Usually used when starting the program.
+     */
+    public void loadPreprocessedImages2DB() {
+        this.database.process();
+    }
+
+    /* Processes all .bmp/.jpg until they become .dbim and all in the <database>.
+     * Then those .dbim are saved to the disk so next time you won't have to
+     * process again, just load.
+     * Use only if really the pictures have changed.
+     */
+    public void reProcessImagesAndLoad2DB() {
+        this.database.process();
+        this.database.save();
     }
 
     public void setChanged(boolean b) {
-         this.changedImage = b;
+         this.imageChanged = b;
     }
 
     public boolean imageHasChanged(){
-        return this.changedImage;
+        return this.imageChanged;
     }
 
     public void setBrainResultChanged() {
@@ -125,9 +148,17 @@ public class SLRTModel extends Observable implements Runnable {
     return   (int)(fraction + startRange);}
      }
 
-    public BufferedImage getNextImage(){
+    public BufferedImage getNextWordImage() {
+        Vector<Word> words = this.database.getWords();
+        File path = words.get(generateRandomInteger(0, words.size() - 1)).getImagePath();
+        BufferedImage buffIm = null;
+        try {
+            buffIm = ImageIO.read(path);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-     return (images.get(generateRandomInteger(0,images.size()-1))).getImage();
+        return buffIm;
     }
 
 //    public void setWordImage()
@@ -154,10 +185,10 @@ public class SLRTModel extends Observable implements Runnable {
         byte typeOfAction;
         while (true) {
             typeOfAction = 0;
-            if (changedImage) {
+            if (imageChanged) {
                 this.setChanged();
                 typeOfAction |= 1;
-                this.changedImage = false;
+                this.imageChanged = false;
                 }
 
             if (newResultFromBrain) {

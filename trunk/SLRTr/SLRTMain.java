@@ -1,9 +1,6 @@
 package SLRTr;
 
 import fxgui.GUIInterface;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
 import javafx.reflect.FXClassType;
 import javafx.reflect.FXLocal;
 import javafx.reflect.FXLocal.Context;

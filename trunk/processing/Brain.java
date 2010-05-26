@@ -22,7 +22,7 @@ public class Brain implements Runnable {
      */
     private final Object lockObject = new Object();
 
-    private SLRTModel parentOpticalModel;
+    private SLRTModel parentModel;
 
     /* Having the sibling eye makes us able to get the captured image
      * and process it.
@@ -37,8 +37,8 @@ public class Brain implements Runnable {
     private int result;
     
 
-    public Brain(SLRTModel om) {
-        this.parentOpticalModel = om;
+    public Brain(SLRTModel m) {
+        this.parentModel = m;
         
         this.capturedImageChanged = false;
         this.result = -1;        
@@ -146,8 +146,7 @@ public class Brain implements Runnable {
                  * (The algorithm is sucky not Iulia)
                  * BTW talkin'bout Iulia M., not Iulia P. Cause Iulia P. _is_ forsure.
                  */
-                //Vector<Letter> letters = this.parentOpticalModel.getLetters();
-                Vector<Letter> letters = null;
+                Vector<Letter> letters = this.parentModel.getLetters();                
                 if (letters == null) {
                     continue;
                 }
@@ -204,7 +203,7 @@ public class Brain implements Runnable {
             
             if (currentResult != this.result) {                
                 this.result = currentResult;
-                this.parentOpticalModel.setBrainResultChanged();
+                this.parentModel.setBrainResultChanged();
             }
         }
     }    
