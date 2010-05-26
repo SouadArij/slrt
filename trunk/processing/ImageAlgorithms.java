@@ -1,4 +1,4 @@
-package processing;
+package Brain;
 
 import Data.GrayImageAndHistogram;
 import Data.Point2D;
@@ -19,7 +19,7 @@ public class ImageAlgorithms {
         }
 
         int swi = buffIm.getWidth(), she = buffIm.getHeight();
-        int[][] dIm =  new int[destinationHeight][destinationWidth];
+        int[][] dIm = new int[destinationHeight][destinationWidth];
         int sRGB, dColor;
         Color sColor;
         int sxi, syi, dxi, dyi;
@@ -34,6 +34,53 @@ public class ImageAlgorithms {
         while (dyi < destinationHeight) {
             sxr = 0;
             sxi = 0;
+            dxi = 0;
+            while (dxi < destinationWidth) {
+                sRGB = buffIm.getRGB(sxi, syi);
+                sColor = new Color(sRGB);
+                dColor = (sColor.getRed() + sColor.getGreen() + sColor.getBlue()) / 3;
+                dIm[dyi][dxi] = dColor;
+
+                sxr += dx;
+                sxi = (int) sxr;
+                dxi++;
+            }
+            syr += dy;
+            syi = (int) syr;
+            dyi++;
+        }
+
+        return dIm;
+    }
+
+    public static int[][] buffIm2CutGrayResizedIntIm(BufferedImage buffIm, int sx1, int sy1, int sx2, int sy2, int destinationWidth, int destinationHeight) {
+
+        if ((buffIm == null) || (destinationWidth <= 0) || (destinationHeight <= 0)) {
+            return null;
+        }
+
+        int swi = buffIm.getWidth(), she = buffIm.getHeight();
+        if ((sx1 >= swi) || (sx1 < 0) || (sy1 < 0) || (sy1 >= she)
+                    || (sx2 >= swi) || (sx2 < 0) || (sy2 >= she) || (sy2 < 0)
+                    || (sx1 >= sx2) || (sy1 >= sy2)) {
+            return null;
+        }
+
+        int[][] dIm = new int[destinationHeight][destinationWidth];
+        int sRGB, dColor;
+        Color sColor;
+        int sxi, syi, dxi, dyi;
+        double dx, dy, sxr, syr;
+
+        dx = (double) sx2 - sx1 / destinationWidth;
+        dy = (double) sy2 - sy1 / destinationHeight;
+
+        syr = 0;
+        syi = 0;
+        dyi = 0;
+        while (dyi < destinationHeight) {
+            sxr = sx1;
+            sxi = sx1;
             dxi = 0;
             while (dxi < destinationWidth) {
                 sRGB = buffIm.getRGB(sxi, syi);
@@ -200,10 +247,10 @@ public class ImageAlgorithms {
         return shape;
     }
 
-    public static Shape reduceShapeHVAreaLimit(Shape originalShape, Point2D firstPoint, int sizeLimit, boolean horizontal, int areaLimit) {        
-        int px, py, nx, ny;        
+    public static Shape reduceShapeHVAreaLimit(Shape originalShape, Point2D firstPoint, int sizeLimit, boolean horizontal, int areaLimit) {
+        int px, py, nx, ny;
         int neighx[] = {-1, 0, 1, -1, 1, -1, 0, 1}, neighy[] = {-1, -1, 1, 0, 0, 1, 1, 1};
-        
+
         Shape reducedShape = new Shape();
         ArrayDeque<Point2D> queue = new ArrayDeque();
         if (originalShape == null) {
@@ -237,7 +284,7 @@ public class ImageAlgorithms {
             if ((reducedArea > areaLimit) || (queue.isEmpty())) {
                 break;
             }
-        }       
+        }
 
         return reducedShape;
     }
@@ -245,6 +292,9 @@ public class ImageAlgorithms {
     public static boolean[][] shapes2BoolIm(Shape[] shapes, int wi, int he) {
         boolean[][] boolImage = new boolean[he][wi];
         for (int shapeIndex = 0; shapeIndex < shapes.length; shapeIndex++) {
+            if (shapes[shapeIndex] == null) {
+                continue;
+            }
             Iterator<Point2D> itpt = shapes[shapeIndex].iterator();
             while (itpt.hasNext()) {
                 Point2D pt = itpt.next();
@@ -294,9 +344,6 @@ public class ImageAlgorithms {
             }
             if (thinShape == null) {
                 outerTries++;
-                if (i > maxFound) {
-                    maxFound = i;
-                }
                 i = 0;
                 workingShape = (Shape) shape.clone();
                 continue;
@@ -304,11 +351,15 @@ public class ImageAlgorithms {
             thinShapes[i] = thinShape;
             workingShape.subtract(thinShape);
             i++;
+            if (i > maxFound) {
+                maxFound = i;
+            }
         }
 
         System.out.format("most thinshapes found: %d\n", maxFound);
         if (outerTries == outerTryLimit) {
-            return null;
+            //return null;
+            return thinShapes;
         }
         return thinShapes;
     }
@@ -405,7 +456,7 @@ public class ImageAlgorithms {
             for (x = 0; x < wi; x++) {
                 if (boolIm[y][x]) {
                     buffIm.setRGB(x, y, foregroundRGB);
-                } 
+                }
             }
         }
 
