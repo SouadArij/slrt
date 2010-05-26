@@ -364,11 +364,11 @@ public class DBImage {
         }
 
         resizedGrayIntIm = ImageAlgorithms.buffIm2GrayResizedIntIm(rawIm, dbImWidth, dbImHeight);
-        contourIntImAndHistogram = ImageAlgorithms.grayIntIm2contourImAndHistogram(resizedGrayIntIm, CONTOUR_POWER);
+        contourIntImAndHistogram = ImageAlgorithms.grayIntIm2ContourImAndHistogram(resizedGrayIntIm, CONTOUR_POWER);
         contourIntIm = contourIntImAndHistogram.getGrayImage();
         histogram = contourIntImAndHistogram.getHistogram();
         treshold = ImageAlgorithms.computeNecessaryThreshold(WHITE_PROPORTION, histogram, dbImWidth * dbImHeight);
-        boolIm = ImageAlgorithms.grayIntIm2boolIm(contourIntIm, treshold);
+        boolIm = ImageAlgorithms.grayIntIm2BoolIm(contourIntIm, treshold);
         boolIm2 = boolIm.clone();
         greatestShape = ImageAlgorithms.findGreatestShape(boolIm2);
 
@@ -430,11 +430,11 @@ public class DBImage {
         }
 
         resizedGrayIntIm = ImageAlgorithms.buffIm2GrayResizedIntIm(rawIm, dbImWidth, dbImHeight);
-        contourIntImAndHistogram = ImageAlgorithms.grayIntIm2contourImAndHistogram(resizedGrayIntIm, CONTOUR_POWER);
+        contourIntImAndHistogram = ImageAlgorithms.grayIntIm2ContourImAndHistogram(resizedGrayIntIm, CONTOUR_POWER);
         contourIntIm = contourIntImAndHistogram.getGrayImage();
         histogram = contourIntImAndHistogram.getHistogram();
         treshold = ImageAlgorithms.computeNecessaryThreshold(WHITE_PROPORTION, histogram, dbImWidth * dbImHeight);
-        boolIm = ImageAlgorithms.grayIntIm2boolIm(contourIntIm, treshold);
+        boolIm = ImageAlgorithms.grayIntIm2BoolIm(contourIntIm, treshold);
         greatestShape = ImageAlgorithms.findGreatestShape(boolIm);
 
         Shape[] thinShapes = ImageAlgorithms.findThinShapes(greatestShape, N_ANGLES, OUTER_TRIES, INNER_TRIES, RATIO_THINNESS, THIN_AREA_LOWER_LIMIT, THIN_AREA_HIGHER_LIMIT);
