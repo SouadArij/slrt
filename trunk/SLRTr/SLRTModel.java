@@ -6,6 +6,8 @@ import Data.Word;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import processing.Brain;
 import processing.EyeWebcam;
@@ -29,7 +31,6 @@ public class SLRTModel extends Observable implements Runnable {
     private Boolean[] pressedFromMovementBrain;
     private Word requieredWord;
     private String buildingWord;
-    private boolean displayedWordCorrect;
     private String currentLetter;
 
     public SLRTModel() {
@@ -170,27 +171,14 @@ public class SLRTModel extends Observable implements Runnable {
     public void run() {
         while (true) {
 
-
             if (this.brainResultChanged) {
                 synchronized (lockObject1) {
                     this.brainResultChanged = false;
                 }
 
-
-                /* Huni: Here we should have a buildingWord without
-                 * this current result. The displayedWord should be
-                 * buildingWord + convert(currentLetterId). This way
-                 * we won't have to delete always the last character
-                 * from the end and add the current. Also helps when
-                 * there is no result (result is -1);
-                 */
-
                 int currentLetterId = this.brain.getResult();
                 this.currentLetter = this.database.id2String(currentLetterId);
                 String displayedWord = this.buildingWord + this.currentLetter;
-                /* Huni introduced end.
-                 */
-
 
                 if (displayedWord.equals(this.requieredWord.getName().substring(0, displayedWord.length() - 1))) {
                     this.buildingWord += this.currentLetter;
@@ -222,6 +210,11 @@ public class SLRTModel extends Observable implements Runnable {
 
                     }
                 }
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(SLRTModel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
