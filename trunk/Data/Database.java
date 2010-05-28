@@ -173,17 +173,16 @@ public class Database {
                         imagePath = new File(xmlStreamReader2.getText());
                     }
 
-                    /* Huni: Why do you open and read the image?
-                     * 
+                    
                     BufferedImage picture = null;
                     try {
-                        picture = ImageIO.read(new File(imagePath));
+                        picture = ImageIO.read(imagePath);
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                     */
-                    this.words.add(new Word(wordName, imagePath));
+                    
+                    this.words.add(new Word(wordName, picture));
                 }
             }
         } catch (Exception ex) {

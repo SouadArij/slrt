@@ -16,29 +16,23 @@ import processing.MovementBrain;
 public class SLRTModel extends Observable implements Runnable {
 
     private final Object lockObject1 = new Object();
-
     private EyeWebcam eye;
     private Brain brain;
-
     private MovementBrain movementBrain;
     private Thread brainThread;
     private Thread movementBrainThread;
-
     private Database database;
-
     private boolean imageChanged;
     private boolean brainResultChanged;
     private boolean movementResultChanged;
-
     private int resultFromBrain;
     private Boolean[] highlightsFromMovementBrain;
     private Boolean[] pressedFromMovementBrain;
 
     private int currentLetterId;
+    private Word currentWord;
     private String displayedWord = "Test";
-    private String currentWord = "Testaaaaa";
     private boolean displayedWordCorrect;
-    private BufferedImage wordImage;
 
     public SLRTModel() {
 
@@ -62,6 +56,8 @@ public class SLRTModel extends Observable implements Runnable {
         this.brainThread.start();
         this.movementBrainThread = new Thread(this.movementBrain);
         this.movementBrainThread.start();
+
+        this.takeNextWordImage();
     }
 
     public Vector<Word> getWords() {
@@ -122,7 +118,7 @@ public class SLRTModel extends Observable implements Runnable {
         //take the correspongind letter and concat it to displayed string in gui
         this.displayedWord += (this.database.getLetters().get(this.resultFromBrain - 1)).getName();
         //if the currentWord contains the displayedWord the the result is good
-        this.displayedWordCorrect = this.currentWord.contains(this.displayedWord);
+        this.displayedWordCorrect = this.currentWord.getName().contains(this.displayedWord);
 
 
         /* Huni: this won't be needed, we'll get the
@@ -152,8 +148,8 @@ public class SLRTModel extends Observable implements Runnable {
 
     public void takeNextWordImage() {
         Vector<Word> words = this.database.getWords();
-        Word newWord = words.get(generateRandomInteger(0, words.size() - 1));
-        this.currentWord = newWord.getName();
+        this.currentWord = words.get(generateRandomInteger(0, words.size() - 1));
+       
         //this.wordImage = newWord.getImage();
     }
 
@@ -162,7 +158,7 @@ public class SLRTModel extends Observable implements Runnable {
     }
 
     public BufferedImage getWordImage() {
-        return this.wordImage;
+        return this.currentWord.getImage();
     }
 
     public boolean getDisplayedWordCorrect() {
@@ -186,22 +182,16 @@ public class SLRTModel extends Observable implements Runnable {
                  * from the end and add the current. Also helps when
                  * there is no result (result is -1);
                  */
+                
                 this.currentLetterId = this.brain.getResult();
                 /* Huni introduced end.
                  */
 
                 this.displayedWord += (new Integer(this.resultFromBrain)).toString();//(this.letters.get(this.resultFromBrain+1)).getName;
 
-                /*   // need to make gui take the string and the boolean for current char
-                if((this.currentWord).contains(this.displayedWord))
-                //true if the letter is ok
-                this.controller.gi.setDisplayedString(this.displayedWord,true);
-                else
-                //false if the letter is wtong
-                this.controller.gi.setDisplayedString(this.displayedWord,false);
-                 */
 
-                if ((this.currentWord).contains(this.displayedWord)) {
+
+                if ((this.currentWord).getName().contains(this.displayedWord)) {
                     this.displayedWordCorrect = true;
 
                 } else {
