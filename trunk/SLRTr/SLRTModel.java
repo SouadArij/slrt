@@ -15,42 +15,36 @@ import processing.MovementBrain;
 
 public class SLRTModel extends Observable implements Runnable {
 
+    private final Object lockObject1 = new Object();
     private EyeWebcam eye;
     private Brain brain;
     private MovementBrain movementBrain;
-
     private Thread brainThread;
     private Thread movementBrainThread;
-
     private Database database;
-            
     private boolean imageChanged;
     private boolean brainResultChanged;
     private boolean movementResultChanged;
-
-
-    
     private int resultFromBrain;
     private Boolean[] highlightsFromMovementBrain;
     private Boolean[] pressedFromMovementBrain;
+    private int currentLetterId;
+    private String displayedWord = "JeG";
+    private String currentWord = "JeGaaaa";
+    private boolean displayedWordCorrect;
+    private BufferedImage wordImage;
 
-    private String displayedWord="JeG";
-    private String currentWord="JeGaaaa";
-    private BufferedImage wordImage;    
-    private boolean  displayedWordCorrect;
-    private File XMLName;
+    public SLRTModel() {
 
-    public SLRTModel() {        
-
-        if (!Database.LETTERS_XML_FILE.exists()) {        
-            Database.generateXMLLetters();                
+        if (!Database.LETTERS_XML_FILE.exists()) {
+            Database.generateXMLLetters();
         }
         if (!Database.WORDS_XML_FILE.exists()) {
-            Database.generateXMLDictionary();        
+            Database.generateXMLDictionary();
         }
         this.database = new Database();
         this.loadPreprocessedImages2DB();
-                
+
         this.brain = new Brain(this);
         this.eye = new EyeWebcam(this);
         this.brain.setSiblingEye(this.eye);
@@ -62,11 +56,6 @@ public class SLRTModel extends Observable implements Runnable {
         this.brainThread.start();
         this.movementBrainThread = new Thread(this.movementBrain);
         this.movementBrainThread.start();
-        
-        this.wordImage = this.getNextWordImage();
-        //this.controller.gi.setWordImage(this.wordImage);
-        
-       // importDataFromXML();        
     }
 
     public Vector<Word> getWords() {
@@ -89,17 +78,9 @@ public class SLRTModel extends Observable implements Runnable {
         return this.pressedFromMovementBrain;
     }
 
-
     public int getResultFromBrain() {
         return this.brain.getResult();
     }
-
-    /* Huni: Why this if we have getCapturedImageFromEye() ?
-     *
-    public BufferedImage getCurrentImage() {
-        return this.currentImage;
-    }
-     */
 
     /**
      * Load all .dbim images in the <database>
@@ -121,22 +102,28 @@ public class SLRTModel extends Observable implements Runnable {
     }
 
     public void setChanged(boolean b) {
-         this.imageChanged = b;
+        this.imageChanged = b;
     }
 
-    public boolean imageHasChanged(){
+    public boolean imageHasChanged() {
         return this.imageChanged;
     }
 
     public void setBrainResultChanged() {
-        this.brainResultChanged = true;
-        this.resultFromBrain = brain.getResult();
+        synchronized (lockObject1) {
+            this.brainResultChanged = true;
+        }
         //take the correspongind letter and concat it to displayed string in gui
-        this.displayedWord+=(this.database.getLetters().get(this.resultFromBrain-1)).getName();
+        this.displayedWord += (this.database.getLetters().get(this.resultFromBrain - 1)).getName();
         //if the currentWord contains the displayedWord the the result is good
-        this.displayedWordCorrect=this.currentWord.contains(this.displayedWord);
+        this.displayedWordCorrect = this.currentWord.contains(this.displayedWord);
 
-        
+
+        /* Huni: this won't be needed, we'll get the
+         * result in the run when we get there.
+         * 
+        this.resultFromBrain = brain.getResult();
+         */
     }
 
     public void setNewResultFromMovementBrain(boolean b) {
@@ -145,112 +132,98 @@ public class SLRTModel extends Observable implements Runnable {
         this.pressedFromMovementBrain = movementBrain.getPressedButtons();
     }
 
-     public int generateRandomInteger(int startRange, int stopRange)
-    {
-    Random random = new Random();
-    {if ( startRange > stopRange ) {
-            throw new IllegalArgumentException("Start cannot exceed End.");
-                 }
-    long range = (long)stopRange - (long)startRange + 1;
-    long fraction = (long)(range * random.nextDouble());
-    return   (int)(fraction + startRange);}
-     }
-
-    public BufferedImage getNextWordImage() {
-        Vector<Word> words = this.database.getWords();
-        Word newWord=words.get(generateRandomInteger(0,words.size()-1));
-        this.currentWord=newWord.getName();
-        File path = newWord.getImagePath();//words.get(generateRandomInteger(0, words.size() - 1)).getImagePath();
-        this.wordImage = null;
-        try {
-           this.wordImage  = ImageIO.read(path);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    public int generateRandomInteger(int startRange, int stopRange) {
+        Random random = new Random();
+        {
+            if (startRange > stopRange) {
+                throw new IllegalArgumentException("Start cannot exceed End.");
+            }
+            long range = (long) stopRange - (long) startRange + 1;
+            long fraction = (long) (range * random.nextDouble());
+            return (int) (fraction + startRange);
         }
-
-
-        return  this.wordImage;
     }
 
-//    public void setWordImage()
-//    {
-//        this.controller.gi.setWordImage(this.wordImage);
-//    }
+    public void takeNextWordImage() {
+        Vector<Word> words = this.database.getWords();
+        Word newWord = words.get(generateRandomInteger(0, words.size() - 1));
+        this.currentWord = newWord.getName();
+        //this.wordImage = newWord.getImage();
+    }
 
-    public String getDisplayedWord()
-    {
+    public String getDisplayedWord() {
         return this.displayedWord;
-    }
-
-    public boolean getDisplayedWordCorrect()
-    {
-        return this.displayedWordCorrect;
     }
 
     public BufferedImage getWordImage() {
         return this.wordImage;
     }
 
-    @Override
-    public void run() {
-        byte typeOfAction;
-        while (true) {
-            typeOfAction = 0;
-            if (imageChanged) {
-                this.setChanged();
-                typeOfAction |= 1;
-                this.imageChanged = false;
-                }
-
-            if (brainResultChanged) {
-                 this.displayedWord += (new Integer(this.resultFromBrain)).toString();//(this.letters.get(this.resultFromBrain+1)).getName;
-                
-               /*   // need to make gui take the string and the boolean for current char
-                if((this.currentWord).contains(this.displayedWord))
-                     //true if the letter is ok
-                    this.controller.gi.setDisplayedString(this.displayedWord,true);
-                else
-                    //false if the letter is wtong
-                    this.controller.gi.setDisplayedString(this.displayedWord,false);
-                */
-
-                 if((this.currentWord).contains(this.displayedWord))
-                     this.displayedWordCorrect = true;
-                 else
-                     this.displayedWordCorrect = false;
-
-
-                typeOfAction |= 2;
-                this.brainResultChanged = false;
-            }
-
-            if (movementResultChanged) {
-                this.setChanged();
-                typeOfAction |= 4;
-                if (this.pressedFromMovementBrain[0]==true)
-                    {
-                     if (this.pressedFromMovementBrain[1]==true)
-                        {
-                        this.wordImage=this.getNextWordImage();
-                        this.displayedWord="";
-                        }
-                     if (this.pressedFromMovementBrain[2]==true)
-                        {String copy=null;
-                         copy=copy.copyValueOf(this.displayedWord.toCharArray(),0,this.displayedWord.length()-1);
-                         this.displayedWord=copy;
-                        }
-                    }
-                this.movementResultChanged = false;
-
-            }
-            if (typeOfAction != 0)
-            this.notifyObservers(typeOfAction);
-        }
+    public boolean getDisplayedWordCorrect() {
+        return this.displayedWordCorrect;
     }
 
-    private void generateMissingXML() {
-        Database.generateXMLDictionary();
-        Database.generateXMLLetters();
+    @Override
+    public void run() {
+        while (true) {
+
+
+            if (this.brainResultChanged) {
+                synchronized (lockObject1) {
+                    this.brainResultChanged = false;
+                }
+
+                /* Huni: Here we should have a buildingWord without
+                 * this current result. The displayedWord should be
+                 * buildingWord + convert(currentLetterId). This way
+                 * we won't have to delete always the last character
+                 * from the end and add the current. Also helps when
+                 * there is no result (result is -1);
+                 */
+                this.currentLetterId = this.brain.getResult();
+                /* Huni introduced end.
+                 */
+
+                this.displayedWord += (new Integer(this.resultFromBrain)).toString();//(this.letters.get(this.resultFromBrain+1)).getName;
+
+                /*   // need to make gui take the string and the boolean for current char
+                if((this.currentWord).contains(this.displayedWord))
+                //true if the letter is ok
+                this.controller.gi.setDisplayedString(this.displayedWord,true);
+                else
+                //false if the letter is wtong
+                this.controller.gi.setDisplayedString(this.displayedWord,false);
+                 */
+
+                if ((this.currentWord).contains(this.displayedWord)) {
+                    this.displayedWordCorrect = true;
+
+                } else {
+                    this.displayedWordCorrect = false;
+
+
+
+
+                }
+            }
+
+            if (this.movementResultChanged) {
+                synchronized (lockObject1) {
+                    this.movementResultChanged = false;
+                }
+                if (this.pressedFromMovementBrain[0]) {
+                    if (this.pressedFromMovementBrain[1]) {
+                        this.takeNextWordImage();
+                        this.displayedWord = "";
+                    }
+                    if (this.pressedFromMovementBrain[2] == true) {
+                        String copy = null;
+                        copy = copy.copyValueOf(this.displayedWord.toCharArray(), 0, this.displayedWord.length() - 1);
+                        this.displayedWord = copy;
+                    }
+                }
+            }
+        }
     }
 }
 
