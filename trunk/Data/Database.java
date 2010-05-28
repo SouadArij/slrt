@@ -185,11 +185,17 @@ public class Database {
             ex.printStackTrace();
         }
     }
-
+/**
+ * Gets the Vector cotaining all the Letters parsed
+ * @return the Vector cotaining all the Letters parsed 
+ */
     public Vector<Letter> getLetters() {
         return this.letters;
     }
-
+/**
+ * Gets  the Vector cotaining all the Words parsed
+ * @return  the Vector cotaining all the Words parsed
+ */
     public Vector<Word> getWords() {
         return this.words;
     }
