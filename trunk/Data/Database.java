@@ -15,14 +15,22 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-
+/**
+ *
+ * @author creata
+ */
 public class Database {
 
+  
     public static final File LETTERS_XML_FILE = new File("src/db/letters/letters.xml");
+
     public static final File WORDS_XML_FILE = new File("src/db/dictionary/dictionary.xml");
     private Vector<Letter> letters;
     private Vector<Word> words;
 
+    /**
+     * Class contructor
+     */
     public Database() {
     }
 
@@ -281,7 +289,11 @@ public class Database {
     public Vector<Word> getWords() {
         return this.words;
     }
-
+/**
+ * 
+ * @param id
+ * @return
+ */
     public String id2String(int id) {
         if (this.words == null) {
             return "_";
