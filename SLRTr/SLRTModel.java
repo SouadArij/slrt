@@ -33,6 +33,9 @@ public class SLRTModel extends Observable implements Runnable {
     private String buildingWord;
     private String currentLetter;
 
+    /**
+     * Class contructor
+     */
     public SLRTModel() {
 
         if (!Database.LETTERS_XML_FILE.exists()) {
@@ -70,18 +73,35 @@ public class SLRTModel extends Observable implements Runnable {
         return this.database.getLetters();
     }
 
+    /**
+     * Gets the BufferedImage caputred by EyeWebcam
+     * @return the BufferedImage caputred by EyeWebcam
+     */
     public BufferedImage getCapturedImageFromEye() {
         return eye.getImage();
     }
 
+    /**
+     * Gets an Array from MovementBrain that indicates the highligted buttons
+     * @return an boolean array from MovementBrain
+     */
     public Boolean[] getHighlightsFromMovementBrain() {
         return this.highlightsFromMovementBrain;
     }
 
+
+    /**
+     * Gets an Array from MovementBrain that indicates the pressed buttons
+     * @return an boolean array from MovementBrain
+     */
     public Boolean[] getPressedFromMovementBrain() {
         return this.pressedFromMovementBrain;
     }
 
+    /**
+     * Called by the EyeWebcam to notify there was a new image captured
+     * @param bool true if it was captured a new image, else false
+     */
     public int getResultFromBrain() {
         return this.brain.getResult();
     }
@@ -109,10 +129,17 @@ public class SLRTModel extends Observable implements Runnable {
         this.imageChanged = b;
     }
 
+    /**
+     * Returns  true if the image from EyeWebcam was changed, else false
+     * @return Returns  true if the image from EyeWebcam was changed, else false
+     */
     public boolean imageHasChanged() {
         return this.imageChanged;
     }
 
+    /**
+     * This method is called by the Brain to notify that the analyze completed
+     */
     public void setBrainResultChanged() {
         synchronized (lockObject1) {
             this.brainResultChanged = true;
@@ -130,12 +157,21 @@ public class SLRTModel extends Observable implements Runnable {
          */
     }
 
+    /**
+     * This method is called by the MovementBrain to notify that the analyze completed
+     */
     public void setNewResultFromMovementBrain(boolean b) {
         this.movementResultChanged = b;
         this.highlightsFromMovementBrain = movementBrain.getHighlightedButtons();
         this.pressedFromMovementBrain = movementBrain.getPressedButtons();
     }
 
+    /**
+     *  Generates a random integer between the startRange and stopRange
+     * @param startRange is the start value of the desired range
+     * @param stopRange is the stop value of the desired range
+     * @return a random integer in the specified range
+     */
     public int generateRandomInteger(int startRange, int stopRange) {
         Random random = new Random();
         {
@@ -148,6 +184,10 @@ public class SLRTModel extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Gets a new Word from the list of available words
+     *
+     */
     public void takeNextWordImage() {
         Vector<Word> words = this.database.getWords();
         this.requieredWord = words.get(generateRandomInteger(0, words.size() - 1));
@@ -155,10 +195,18 @@ public class SLRTModel extends Observable implements Runnable {
         //this.wordImage = newWord.getImage();
     }
 
+    /**
+     * Gets the curent string displayed on the interface
+     * @return the current string displayed on the interface
+     */
     public String getBuildingWord() {
         return this.buildingWord;
     }
 
+    /**
+     * Gets the corresponding BufferedImage of this Word
+     * @return BufferedImage
+     */
     public BufferedImage getWordImage() {
         return this.requieredWord.getImage();
     }

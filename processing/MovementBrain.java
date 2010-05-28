@@ -9,7 +9,7 @@ import SLRTr.SLRTModel;
 public class MovementBrain implements Runnable {
 
     private static int imageSizeSetting = 1;
-    private static int THRESHOLD_DIFFERENCE = 70000 / imageSizeSetting;
+    private static int THRESHOLD_DIFFERENCE = 320000 / imageSizeSetting;
     private static int PLAY_BUTTON_X = 295 * imageSizeSetting;
     private static int PLAY_BUTTON_Y = 25 * imageSizeSetting;
     private static int STOP_BUTTON_X = 25 * imageSizeSetting;
@@ -54,6 +54,7 @@ public class MovementBrain implements Runnable {
             if (this.previousImageForDetection.getHeight() == 480 && this.currentImageForDetection.getWidth() == 640) {
                 MovementBrain.imageSizeSetting = 2;
             }
+            System.out.println("ImageSizeSetting:" + MovementBrain.imageSizeSetting);
             int btn_diff = 0;
             for (y = buttonY - BUTTON_RADIUS; y < buttonY + BUTTON_RADIUS; y++) {
                 for (x = buttonX - BUTTON_RADIUS; x < buttonX + BUTTON_RADIUS; x++) {
