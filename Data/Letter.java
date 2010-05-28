@@ -34,12 +34,14 @@ public class Letter {
     public String getName() {
         return this.letterName;
     }
+
     
     /**
      * Returns the the relative path of this letter's images.
      * @return      Returns an String object.
      *
      */
+
     public File getDirPath() {
         return this.dirPath;
     }

@@ -45,7 +45,7 @@ public class GUINewTest extends GUIInterface {
     var imageBack: Image = img13;
     var imageButtons: Image[];
     var string: String;
-    var correct: Boolean;
+    var currentLetter: String;
     var fillColor: Color;
     var wordImage: BufferedImage;
     
@@ -131,18 +131,7 @@ public class GUINewTest extends GUIInterface {
 
     }
 
-    //gets fillColor for text on screen: blue if correct and some kind of red when wrong
-    function getFillColor():Color {
-
-        if (this.correct == true) {
-            return Color.SKYBLUE;
-;
-        }
-        else {
-            return Color.rgb(242,57,104);           
-        }
-
-    }
+ 
 
 
     public override function myRun() {
@@ -155,9 +144,8 @@ public class GUINewTest extends GUIInterface {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(10s)
@@ -165,9 +153,8 @@ public class GUINewTest extends GUIInterface {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(20s)
@@ -175,9 +162,8 @@ public class GUINewTest extends GUIInterface {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(30s)
@@ -185,9 +171,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(40s)
@@ -195,9 +180,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(50s)
@@ -205,9 +189,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(60s)
@@ -215,9 +198,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(70s)
@@ -225,9 +207,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(80s)
@@ -235,9 +216,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(90s)
@@ -245,9 +225,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(100s)
@@ -255,9 +234,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(110s)
@@ -265,9 +243,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(120s)
@@ -275,9 +252,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(130s)
@@ -285,9 +261,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             },
                 at(140s)
@@ -295,9 +270,8 @@ public class GUINewTest extends GUIInterface {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
             this.highlightedButtons => getHighlightedButtons();
             this.imageButtons => updateButtons(this.highlightedButtons);
-            this.string => om.getDisplayedWord();
-            this.correct => om.getDisplayedWordCorrect();
-            this.fillColor => getFillColor();
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
             }]
     }.play();
@@ -460,11 +434,27 @@ public class GUINewTest extends GUIInterface {
             name: "Comic Sans MS"
             size: 50
         }
-        fill: bind fillColor
+        fill: Color.SKYBLUE
         stroke: Color.DARKBLUE
         strokeWidth: 0.4
         effect: DropShadow{}
         content: bind this.string
+        visible: bind highlightedButtons[0] //visible only when play button is highlighted
+        //opacity: 0.95
+    }
+
+        var currentLetter: Text = Text {
+        x: 120
+        y: 467
+        font: Font {
+            name: "Comic Sans MS"
+            size: 50
+        }
+        fill: Color.rgb(242, 57, 104)
+        stroke: Color.DARKRED
+        strokeWidth: 0.4
+        effect: DropShadow{}
+        content: bind this.currentLetter
         visible: bind highlightedButtons[0] //visible only when play button is highlighted
         //opacity: 0.95
     }

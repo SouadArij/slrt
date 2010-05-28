@@ -25,15 +25,12 @@ public class SLRTModel extends Observable implements Runnable {
     private boolean imageChanged;
     private boolean brainResultChanged;
     private boolean movementResultChanged;
-    private int resultFromBrain;
     private Boolean[] highlightsFromMovementBrain;
     private Boolean[] pressedFromMovementBrain;
-
-    private int currentLetterId;
-    private Word currentWord;
-    private String displayedWord = "Test";
+    private Word requieredWord;
+    private String buildingWord;
     private boolean displayedWordCorrect;
-    private boolean stopped;
+    private String currentLetter;
 
     public SLRTModel() {
 
@@ -59,7 +56,9 @@ public class SLRTModel extends Observable implements Runnable {
         this.movementBrainThread.start();
 
         this.takeNextWordImage();
-        this.stopped=true;
+
+        this.currentLetter = "";
+
     }
 
     public Vector<Word> getWords() {
@@ -118,9 +117,9 @@ public class SLRTModel extends Observable implements Runnable {
             this.brainResultChanged = true;
         }
         //take the correspongind letter and concat it to displayed string in gui
-        this.displayedWord += (this.database.getLetters().get(this.resultFromBrain - 1)).getName();
+        // this.displayedWord += (this.database.getLetters().get(this.resultFromBrain - 1)).getName();
         //if the currentWord contains the displayedWord the the result is good
-        this.displayedWordCorrect = this.currentWord.getName().contains(this.displayedWord);
+        //  this.displayedWordCorrect = this.currentWord.getName().contains(this.displayedWord);
 
 
         /* Huni: this won't be needed, we'll get the
@@ -150,21 +149,21 @@ public class SLRTModel extends Observable implements Runnable {
 
     public void takeNextWordImage() {
         Vector<Word> words = this.database.getWords();
-        this.currentWord = words.get(generateRandomInteger(0, words.size() - 1));
-       
+        this.requieredWord = words.get(generateRandomInteger(0, words.size() - 1));
+
         //this.wordImage = newWord.getImage();
     }
 
-    public String getDisplayedWord() {
-        return this.displayedWord;
+    public String getBuildingWord() {
+        return this.buildingWord;
     }
 
     public BufferedImage getWordImage() {
-        return this.currentWord.getImage();
+        return this.requieredWord.getImage();
     }
 
-    public boolean getDisplayedWordCorrect() {
-        return this.displayedWordCorrect;
+    public String getCurrentLetter() {
+        return this.currentLetter;
     }
 
     @Override
@@ -177,6 +176,7 @@ public class SLRTModel extends Observable implements Runnable {
                     this.brainResultChanged = false;
                 }
 
+
                 /* Huni: Here we should have a buildingWord without
                  * this current result. The displayedWord should be
                  * buildingWord + convert(currentLetterId). This way
@@ -184,51 +184,41 @@ public class SLRTModel extends Observable implements Runnable {
                  * from the end and add the current. Also helps when
                  * there is no result (result is -1);
                  */
-                
-                this.currentLetterId = this.brain.getResult();
+
+                int currentLetterId = this.brain.getResult();
+                this.currentLetter = this.database.id2String(currentLetterId);
+                String displayedWord = this.buildingWord + this.currentLetter;
                 /* Huni introduced end.
                  */
 
-                this.displayedWord += (new Integer(this.resultFromBrain)).toString();//(this.letters.get(this.resultFromBrain+1)).getName;
 
-
-
-                if ((this.currentWord).getName().contains(this.displayedWord)) {
-                    this.displayedWordCorrect = true;
-
-                } else {
-                    this.displayedWordCorrect = false;
-
-
-
-
+                if (displayedWord.equals(this.requieredWord.getName().substring(0, displayedWord.length() - 1))) {
+                    this.buildingWord += this.currentLetter;
                 }
-            }
 
-            if (this.movementResultChanged) {
-                synchronized (lockObject1) {
-                    this.movementResultChanged = false;
+
+                if (this.movementResultChanged) {
+                    synchronized (lockObject1) {
+                        this.movementResultChanged = false;
+
+                    }
+
+                    if (this.pressedFromMovementBrain[0]) {
+                        if (this.pressedFromMovementBrain[1]) {
+                            this.takeNextWordImage();
+                            this.buildingWord = "";
+                        }
+                        if (this.pressedFromMovementBrain[2]) {
+                            this.buildingWord = this.buildingWord.substring(0, this.buildingWord.length() - 2);
+                        }
+
+                        if (this.pressedFromMovementBrain[3] == true) {
+                            this.brain.stopAlgorithmRunning();
+                        }
+
+
+                    }
                 }
-                if (this.pressedFromMovementBrain[0]) {
-                    if (stopped)
-                    {this.brain.startAlgorithmRunning();
-                     this.stopped=false;
-                    }
-                    if (this.pressedFromMovementBrain[1]) {
-                        this.takeNextWordImage();
-                        this.displayedWord = "";
-                    }
-//                    if (this.pressedFromMovementBrain[2] == true) {
-//                        String copy = null;
-//                        copy = copy.copyValueOf(this.displayedWord.toCharArray(), 0, this.displayedWord.length() - 1);
-//                        this.displayedWord = copy;
-//                    }
-                    }
-                if (this.pressedFromMovementBrain[3]==true)
-                 {
-                    this.brain.stopAlgorithmRunning();
-                    this.stopped=true;
-                 }
             }
         }
     }
