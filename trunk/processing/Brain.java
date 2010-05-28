@@ -67,6 +67,7 @@ public class Brain implements Runnable {
         return this.result;
     }
 
+
     public Boolean checkAlgorithmRunning(){
      return this.algorithmRunning;
     }
