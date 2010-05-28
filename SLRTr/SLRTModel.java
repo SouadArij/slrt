@@ -12,6 +12,7 @@ import processing.EyeWebcam;
 import java.util.Observable;
 import java.util.Random;
 import processing.MovementBrain;
+import xmlparser.XMLWrite;
 
 public class SLRTModel extends Observable implements Runnable {
 
@@ -36,23 +37,18 @@ public class SLRTModel extends Observable implements Runnable {
     private String currentWord="JeGaaaa";
     private BufferedImage wordImage;    
     private boolean  displayedWordCorrect;
+    private File XMLName;
 
     public SLRTModel() {
         data = new Vector<Object>();
 
         this.database = new Database();
         this.loadPreprocessedImages2DB();
-
+        this.loadData();
         /* Don't get this, but I'm sure this doesn't fit here in the constructor.
          * Do this in a separate function. And do this only on specific request.
          *
-        this.XMLName = new File("src/db/letters/letters.xml");
-        if (XMLName.exists()) {            
-        } else {
-            XMLWrite xmlWriter = new XMLWrite();
-            xmlWriter.generateXMLLetters();
-            xmlWriter.generateXMLDictionary();
-        }
+       
          */
         
         this.brain = new Brain(this);
@@ -220,6 +216,16 @@ public class SLRTModel extends Observable implements Runnable {
             }
             if (typeOfAction != 0)
             this.notifyObservers(typeOfAction);
+        }
+    }
+
+    private void loadData() {
+        this.XMLName = new File("src/db/letters/letters.xml");
+        if (XMLName.exists()) {
+        } else {
+            XMLWrite xmlWriter = new XMLWrite();
+            xmlWriter.generateXMLLetters();
+            xmlWriter.generateXMLDictionary();
         }
     }
 }

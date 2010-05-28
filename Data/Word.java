@@ -27,7 +27,10 @@ public class Word {
     public String getName() {
         return this.wordName;
     }
-
+/**
+ * Gets the path of this Word's image
+ * @return the path of this Word's image
+ */
 
     public File getImagePath() {
         return this.imagePath;
