@@ -16,21 +16,27 @@ import processing.MovementBrain;
 public class SLRTModel extends Observable implements Runnable {
 
     private final Object lockObject1 = new Object();
+
     private EyeWebcam eye;
     private Brain brain;
+
     private MovementBrain movementBrain;
     private Thread brainThread;
     private Thread movementBrainThread;
+
     private Database database;
+
     private boolean imageChanged;
     private boolean brainResultChanged;
     private boolean movementResultChanged;
+
     private int resultFromBrain;
     private Boolean[] highlightsFromMovementBrain;
     private Boolean[] pressedFromMovementBrain;
+
     private int currentLetterId;
-    private String displayedWord = "JeG";
-    private String currentWord = "JeGaaaa";
+    private String displayedWord = "Test";
+    private String currentWord = "Testaaaaa";
     private boolean displayedWordCorrect;
     private BufferedImage wordImage;
 
