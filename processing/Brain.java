@@ -34,7 +34,7 @@ public class Brain implements Runnable {
      */
     private boolean capturedImageChanged;
 
-    private boolean algorithmRunning;
+    private Boolean algorithmRunning;
     
     private int result;
 
@@ -66,7 +66,11 @@ public class Brain implements Runnable {
     public int getResult() {
         return this.result;
     }
-    
+
+    public Boolean checkAlgorithmRunning(){
+     return this.algorithmRunning;
+    }
+
     public void startAlgorithmRunning()
     {this.algorithmRunning=true;}
 
