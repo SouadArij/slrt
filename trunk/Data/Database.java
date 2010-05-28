@@ -29,7 +29,8 @@ public class Database {
     public Database() {
     }
 
-    /* Parse XMLs of Letters and Words.
+    /**
+     * Parse XMLs of Letters and Words.
      * Then load preprocessed DB images from disk to memory.
      */
     public void load() {
@@ -54,7 +55,8 @@ public class Database {
         }
     }
 
-    /* Parse XMLs of Letters and Words.
+    /**
+     * Parse XMLs of Letters and Words.
      * Then process bmp/jpg images from disk and load the processed images to memory.
      */
     public void process() {                                        
@@ -79,7 +81,8 @@ public class Database {
         }
     }
 
-    /* Save processed DB images that are in memory to disk.
+    /**
+     * Save processed DB images that are in memory to disk.
      */
     public void save() {
         if (this.letters == null) {
@@ -190,6 +193,9 @@ public class Database {
         }
     }
 
+   /**
+    * Generates the Xml that contains the information for Letter objects
+    */
     public static void generateXMLLetters() {
         String letter;
 
@@ -226,6 +232,9 @@ public class Database {
         }
     }
 
+    /**
+     * Generates the Xml that contains the information for Dictionary objects
+     */
     public static void generateXMLDictionary() {
         String word;
 

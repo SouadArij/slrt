@@ -37,7 +37,7 @@ public class Brain implements Runnable {
     private boolean algorithmRunning;
     
     private int result;
-    
+
 
     public Brain(SLRTModel m) {
         this.parentModel = m;
@@ -67,7 +67,12 @@ public class Brain implements Runnable {
         return this.result;
     }
     
- 
+    public void startAlgorithmRunning()
+    {this.algorithmRunning=true;}
+
+     public void stopAlgorithmRunning()
+    {this.algorithmRunning=false;}
+     
     @Override
     public void run() {
         Random r = new Random();

@@ -10,10 +10,10 @@ public class Word {
 
     /**
      * Class contructor. The name argument is a specifier.
-     * The url argument must specify an relative adress on the pshysical memory.
+     * The img argument must specify the image corresponding to this word.
      *
      * @param  path  an relative adress on the pshysical memory giving the base location of the image
-     * @param  name the name of the image
+     * @param  img   the image corresponding to this Word
      */
     public Word(String name, BufferedImage img) {
         this.wordName = name;
@@ -21,7 +21,7 @@ public class Word {
     }
 
     /**
-     * Returns the name of this picture in use
+     * Returns the name of this Word
      * @return      Returns an String object.
      *
      */
@@ -30,8 +30,8 @@ public class Word {
     }
 
     /**
-     * Gets the path of this Word's image
-     * @return the path of this Word's image
+     * Gets the BufferedImage of this Word
+     * @return the BufferedImage of this Word
      */
     public BufferedImage getImage() {
         return this.image;
