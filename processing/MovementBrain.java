@@ -26,7 +26,7 @@ public class MovementBrain implements Runnable {
     private int indexOfButtonPressed;
     private int[] noiseCounter = new int[4];
     private Boolean[] buttonHighlighted = new Boolean[4];
-    private boolean[] buttonPressed = new boolean[4];
+    private Boolean[] buttonPressed = new Boolean[4];
     private boolean keepFirstImage;
 
     public MovementBrain(SLRTModel m) {
@@ -153,6 +153,9 @@ public class MovementBrain implements Runnable {
         return this.buttonHighlighted;
     }
 
+    public Boolean[] getPressedButtons() {
+        return this.buttonPressed;
+    }
     @Override
     public void run() {
         while (true) {
@@ -180,5 +183,7 @@ public class MovementBrain implements Runnable {
             }
         }
     }
+
+
 }
 
