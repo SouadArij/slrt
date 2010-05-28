@@ -16,13 +16,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-
-
 public class Database {
 
     public static final File LETTERS_XML_FILE = new File("src/db/letters/letters.xml");
     public static final File WORDS_XML_FILE = new File("src/db/dictionary/dictionary.xml");
-
     private Vector<Letter> letters;
     private Vector<Word> words;
 
@@ -59,7 +56,7 @@ public class Database {
      * Parse XMLs of Letters and Words.
      * Then process bmp/jpg images from disk and load the processed images to memory.
      */
-    public void process() {                                        
+    public void process() {
         this.XMLparseLetters();
         this.XMLparseWords();
 
@@ -102,7 +99,7 @@ public class Database {
                 dbIm.saveToDisk(file);
 
                 i++;
-            }            
+            }
         }
     }
 
@@ -170,13 +167,12 @@ public class Database {
                         event = xmlStreamReader2.next();
                     }
 
-                    if (xmlStreamReader2.getLocalName().equals("path"))
-                    {
+                    if (xmlStreamReader2.getLocalName().equals("path")) {
                         event = xmlStreamReader2.next();
                         imagePath = new File(xmlStreamReader2.getText());
                     }
 
-                    
+
                     BufferedImage picture = null;
                     try {
                         picture = ImageIO.read(imagePath);
@@ -184,7 +180,7 @@ public class Database {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    
+
                     this.words.add(new Word(wordName, picture));
                 }
             }
@@ -247,7 +243,7 @@ public class Database {
 
                 xmlStreamWriter.writeStartElement("dictionary");
 
-                while((word = br.readLine()) != null) {
+                while ((word = br.readLine()) != null) {
                     xmlStreamWriter.writeStartElement("word");
                     xmlStreamWriter.writeStartElement("name");
                     xmlStreamWriter.writeCharacters(word);
@@ -269,7 +265,7 @@ public class Database {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Gets the Vector cotaining all the Letters parsed
      * @return the Vector cotaining all the Letters parsed
@@ -284,5 +280,15 @@ public class Database {
      */
     public Vector<Word> getWords() {
         return this.words;
+    }
+
+    public String id2String(int id) {
+        if (this.words == null) {
+            return "_";
+        }
+        if (id - 1 < 0 || id - 1 > this.words.size() - 1) {
+            return "_";
+        }
+        return this.words.get(id - 1).getName();
     }
 }
