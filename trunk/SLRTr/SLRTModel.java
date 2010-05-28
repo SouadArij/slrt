@@ -31,7 +31,8 @@ public class SLRTModel extends Observable implements Runnable {
 
     
     private int resultFromBrain;
-    private Boolean[] resultFromMovementBrain;
+    private Boolean[] highlightsFromMovementBrain;
+    private Boolean[] pressedFromMovementBrain;
 
     private String displayedWord="JeG";
     private String currentWord="JeGaaaa";
@@ -80,9 +81,14 @@ public class SLRTModel extends Observable implements Runnable {
         return eye.getImage();
     }
 
-    public Boolean[] getResultFromMovementBrain() {
-        return this.resultFromMovementBrain;
+    public Boolean[] getHighlightsFromMovementBrain() {
+        return this.highlightsFromMovementBrain;
     }
+
+    public Boolean[] getPressedFromMovementBrain() {
+        return this.pressedFromMovementBrain;
+    }
+
 
     public int getResultFromBrain() {
         return this.brain.getResult();
@@ -95,14 +101,16 @@ public class SLRTModel extends Observable implements Runnable {
     }
      */
 
-    /* Load all .dbim images in the <database>
+    /**
+     * Load all .dbim images in the <database>
      * Usually used when starting the program.
      */
     public void loadPreprocessedImages2DB() {
         this.database.process();
     }
 
-    /* Processes all .bmp/.jpg until they become .dbim and all in the <database>.
+    /**
+     * Processes all .bmp/.jpg until they become .dbim and all in the <database>.
      * Then those .dbim are saved to the disk so next time you won't have to
      * process again, just load.
      * Use only if really the pictures have changed.
@@ -123,12 +131,18 @@ public class SLRTModel extends Observable implements Runnable {
     public void setBrainResultChanged() {
         this.brainResultChanged = true;
         this.resultFromBrain = brain.getResult();
+        //take the correspongind letter and concat it to displayed string in gui
+        this.displayedWord+=(this.database.getLetters().get(this.resultFromBrain-1)).getName();
+        //if the currentWord contains the displayedWord the the result is good
+        this.displayedWordCorrect=this.currentWord.contains(this.displayedWord);
+
         
     }
 
     public void setNewResultFromMovementBrain(boolean b) {
         this.movementResultChanged = b;
-        resultFromMovementBrain = movementBrain.getHighlightedButtons();
+        this.highlightsFromMovementBrain = movementBrain.getHighlightedButtons();
+        this.pressedFromMovementBrain = movementBrain.getPressedButtons();
     }
 
      public int generateRandomInteger(int startRange, int stopRange)
@@ -144,15 +158,18 @@ public class SLRTModel extends Observable implements Runnable {
 
     public BufferedImage getNextWordImage() {
         Vector<Word> words = this.database.getWords();
-        File path = words.get(generateRandomInteger(0, words.size() - 1)).getImagePath();
-        BufferedImage buffIm = null;
+        Word newWord=words.get(generateRandomInteger(0,words.size()-1));
+        this.currentWord=newWord.getName();
+        File path = newWord.getImagePath();//words.get(generateRandomInteger(0, words.size() - 1)).getImagePath();
+        this.wordImage = null;
         try {
-            buffIm = ImageIO.read(path);
+           this.wordImage  = ImageIO.read(path);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return buffIm;
+
+        return  this.wordImage;
     }
 
 //    public void setWordImage()
@@ -210,7 +227,21 @@ public class SLRTModel extends Observable implements Runnable {
             if (movementResultChanged) {
                 this.setChanged();
                 typeOfAction |= 4;
+                if (this.pressedFromMovementBrain[0]==true)
+                    {
+                     if (this.pressedFromMovementBrain[1]==true)
+                        {
+                        this.wordImage=this.getNextWordImage();
+                        this.displayedWord="";
+                        }
+                     if (this.pressedFromMovementBrain[2]==true)
+                        {String copy=null;
+                         copy=copy.copyValueOf(this.displayedWord.toCharArray(),0,this.displayedWord.length()-1);
+                         this.displayedWord=copy;
+                        }
+                    }
                 this.movementResultChanged = false;
+
             }
             if (typeOfAction != 0)
             this.notifyObservers(typeOfAction);

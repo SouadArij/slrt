@@ -27,6 +27,7 @@ public class GUINewTest extends GUIInterface {
     var om: SLRTModel;
     var currImg: Image;
     var highlightedButtons: Boolean[];
+    var pressedButtons : Boolean[];
     var img1:Image = Image {url: "{__DIR__}icons/closefirst.png"};
     var img2:Image = Image {url: "{__DIR__}icons/closesecond.png"};
     var img4:Image = Image {url: "{__DIR__}icons/playfirst.png"};
@@ -111,7 +112,19 @@ public class GUINewTest extends GUIInterface {
     {
         var result:Boolean[];
         var i: java.lang.Integer = 0;
-        for (nr in om.getResultFromMovementBrain()){
+        for (nr in om.getHighlightsFromMovementBrain()){
+            result[i] = nr;
+            i++;}
+        return result;
+
+    }
+    
+    //gets the pressed buttons from movementBrain
+     function getPressedButtons():Boolean[]
+    {
+        var result:Boolean[];
+        var i: java.lang.Integer = 0;
+        for (nr in om.getPressedFromMovementBrain()){
             result[i] = nr;
             i++;}
         return result;
