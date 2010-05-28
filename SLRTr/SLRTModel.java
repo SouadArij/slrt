@@ -12,7 +12,6 @@ import processing.EyeWebcam;
 import java.util.Observable;
 import java.util.Random;
 import processing.MovementBrain;
-import xmlparser.XMLWrite;
 
 public class SLRTModel extends Observable implements Runnable {
 
@@ -20,37 +19,37 @@ public class SLRTModel extends Observable implements Runnable {
     private Brain brain;
     private MovementBrain movementBrain;
 
-    private Database database;
-    
-    private Vector<Object> data;
-    private BufferedImage currentImage;       
-    private boolean imageChanged;
-    //private Vector<Letter> letters = new Vector<Letter>();
-    //private Vector<MyImage> images = new Vector<MyImage>();
-    private boolean newResultFromBrain;
-    private boolean newResultFromMovementBrain;    
     private Thread brainThread;
     private Thread movementBrainThread;
+
+    private Database database;
+            
+    private boolean imageChanged;
+    private boolean brainResultChanged;
+    private boolean movementResultChanged;
+
+
+    
     private int resultFromBrain;
     private Boolean[] resultFromMovementBrain;
+
     private String displayedWord="JeG";
     private String currentWord="JeGaaaa";
     private BufferedImage wordImage;    
     private boolean  displayedWordCorrect;
     private File XMLName;
 
-    public SLRTModel() {
-        data = new Vector<Object>();
+    public SLRTModel() {        
 
+        if (!Database.LETTERS_XML_FILE.exists()) {        
+            Database.generateXMLLetters();                
+        }
+        if (!Database.WORDS_XML_FILE.exists()) {
+            Database.generateXMLDictionary();        
+        }
         this.database = new Database();
         this.loadPreprocessedImages2DB();
-        this.loadData();
-        /* Don't get this, but I'm sure this doesn't fit here in the constructor.
-         * Do this in a separate function. And do this only on specific request.
-         *
-       
-         */
-        
+                
         this.brain = new Brain(this);
         this.eye = new EyeWebcam(this);
         this.brain.setSiblingEye(this.eye);
@@ -66,8 +65,7 @@ public class SLRTModel extends Observable implements Runnable {
         this.wordImage = this.getNextWordImage();
         //this.controller.gi.setWordImage(this.wordImage);
         
-       // importDataFromXML();
-        currentImage = getCapturedImageFromEye();
+       // importDataFromXML();        
     }
 
     public Vector<Word> getWords() {
@@ -123,13 +121,13 @@ public class SLRTModel extends Observable implements Runnable {
     }
 
     public void setBrainResultChanged() {
-        this.newResultFromBrain = true;
+        this.brainResultChanged = true;
         this.resultFromBrain = brain.getResult();
         
     }
 
     public void setNewResultFromMovementBrain(boolean b) {
-        this.newResultFromMovementBrain = b;
+        this.movementResultChanged = b;
         resultFromMovementBrain = movementBrain.getHighlightedButtons();
     }
 
@@ -187,7 +185,7 @@ public class SLRTModel extends Observable implements Runnable {
                 this.imageChanged = false;
                 }
 
-            if (newResultFromBrain) {
+            if (brainResultChanged) {
                  this.displayedWord += (new Integer(this.resultFromBrain)).toString();//(this.letters.get(this.resultFromBrain+1)).getName;
                 
                /*   // need to make gui take the string and the boolean for current char
@@ -206,27 +204,22 @@ public class SLRTModel extends Observable implements Runnable {
 
 
                 typeOfAction |= 2;
-                this.newResultFromBrain = false;
+                this.brainResultChanged = false;
             }
 
-            if (newResultFromMovementBrain) {
+            if (movementResultChanged) {
                 this.setChanged();
                 typeOfAction |= 4;
-                this.newResultFromMovementBrain = false;
+                this.movementResultChanged = false;
             }
             if (typeOfAction != 0)
             this.notifyObservers(typeOfAction);
         }
     }
 
-    private void loadData() {
-        this.XMLName = new File("src/db/letters/letters.xml");
-        if (XMLName.exists()) {
-        } else {
-            XMLWrite xmlWriter = new XMLWrite();
-            xmlWriter.generateXMLLetters();
-            xmlWriter.generateXMLDictionary();
-        }
+    private void generateMissingXML() {
+        Database.generateXMLDictionary();
+        Database.generateXMLLetters();
     }
 }
 

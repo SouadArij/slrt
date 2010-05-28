@@ -1,22 +1,27 @@
 package Data;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
 
 
 
 public class Database {
 
-    private static final File LETTERS_XML_FILE = new File("src/db/letters/letters.xml");
-    private static final File WORDS_XML_FILE = new File("src/db/dictionary/dictionary.xml");
+    public static final File LETTERS_XML_FILE = new File("src/db/letters/letters.xml");
+    public static final File WORDS_XML_FILE = new File("src/db/dictionary/dictionary.xml");
 
     private Vector<Letter> letters;
     private Vector<Word> words;
@@ -185,17 +190,90 @@ public class Database {
             ex.printStackTrace();
         }
     }
-/**
- * Gets the Vector cotaining all the Letters parsed
- * @return the Vector cotaining all the Letters parsed 
- */
+
+    public static void generateXMLLetters() {
+        String letter;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File("src/db/letters/letters.txt")));
+
+            try {
+                XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+                FileWriter output = new FileWriter(LETTERS_XML_FILE);
+                XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(output);
+
+                xmlStreamWriter.writeStartElement("letters");
+
+                while ((letter = br.readLine()) != null) {
+                    xmlStreamWriter.writeStartElement("letter");
+                    xmlStreamWriter.writeStartElement("name");
+                    xmlStreamWriter.writeCharacters(letter);
+                    xmlStreamWriter.writeEndElement();
+                    xmlStreamWriter.writeStartElement("path");
+                    xmlStreamWriter.writeCharacters("src/db/letters/" + letter + "/");
+                    xmlStreamWriter.writeEndElement();
+                    xmlStreamWriter.writeEndElement();
+                }
+                br.close();
+                xmlStreamWriter.writeEndElement();
+
+                xmlStreamWriter.flush();
+                xmlStreamWriter.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void generateXMLDictionary() {
+        String word;
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File("src/db/dictionary/dictionary.txt")));
+            try {
+                XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+                FileWriter output = new FileWriter(WORDS_XML_FILE);
+                XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(output);
+
+                xmlStreamWriter.writeStartElement("dictionary");
+
+                while((word = br.readLine()) != null) {
+                    xmlStreamWriter.writeStartElement("word");
+                    xmlStreamWriter.writeStartElement("name");
+                    xmlStreamWriter.writeCharacters(word);
+                    xmlStreamWriter.writeEndElement();
+                    xmlStreamWriter.writeStartElement("path");
+                    xmlStreamWriter.writeCharacters("src/db/dictionary/" + word + ".jpg");
+                    xmlStreamWriter.writeEndElement();
+                    xmlStreamWriter.writeEndElement();
+                }
+                br.close();
+                xmlStreamWriter.writeEndElement();
+
+                xmlStreamWriter.flush();
+                xmlStreamWriter.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Gets the Vector cotaining all the Letters parsed
+     * @return the Vector cotaining all the Letters parsed
+     */
     public Vector<Letter> getLetters() {
         return this.letters;
     }
-/**
- * Gets  the Vector cotaining all the Words parsed
- * @return  the Vector cotaining all the Words parsed
- */
+
+    /**
+     * Gets  the Vector cotaining all the Words parsed
+     * @return  the Vector cotaining all the Words parsed
+     */
     public Vector<Word> getWords() {
         return this.words;
     }
