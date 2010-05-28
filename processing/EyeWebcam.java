@@ -34,6 +34,11 @@ public class EyeWebcam {
     private CaptureStream captureStream;
     private CaptureSystem captureSystem;
 
+    /**
+     * Class contructor.The om argument specifies the SLRTModel that controlls data from this EyeWebcam.
+     * @param om the SLRTModel that controlls data from this object
+     *
+     */
     public EyeWebcam(SLRTModel om) {        
         this.parentModel = om;
         this.image = null;
@@ -64,6 +69,9 @@ public class EyeWebcam {
         this.siblingBrain = b;
     }
 
+    /**
+     * Launches this EyeWebcam and it starts to capture images.
+     */
     public void start() {
         try {
             if (this.captureStream != null) {
@@ -74,6 +82,9 @@ public class EyeWebcam {
         }
     }
 
+    /**
+     * Stops this EyeWebcam
+     */
     public void stop() {
         try {
             this.captureStream.stop();
@@ -82,14 +93,25 @@ public class EyeWebcam {
         }
     }
 
+    /**
+     * Gets the BufferedImage captured by this EyeWebcam
+     * @return the BufferedImage captured by this object
+     */
     public BufferedImage getImage() {
         return image;
     }
 
+    /**
+     * Sets the BufferedImage captured by this EyeWebcam
+     * @param newImage the BufferedImaged to be associated
+     */
     public void setImage(BufferedImage newImage) {
         this.image = newImage;
     }
 
+    /**
+     * Notifies the Brain and the OpticalModel that it has a new BufferedImage
+     */
     public void notifyWaitingComponents() {
         siblingBrain.setCapturedImageChanged();
         parentModel.setChanged(true);
@@ -98,9 +120,18 @@ public class EyeWebcam {
 
     private class MyCaptureObserver implements CaptureObserver {
 
+         /**
+         * Class contructor.The e argument specifies the EyeWebcam captures the images for this MyCaptureObserver.
+         * @param e the EyeWebcam captures the images for this object.
+         */
         public MyCaptureObserver(EyeWebcam e) {
         }
 
+         /**
+         * Overided method. When a new image is captured by the EyeWebcam
+         * @param arg0 the current stream
+         * @param arg1 the captured image
+         */
         @Override
         public void onNewImage(CaptureStream arg0, Image arg1) {
             BufferedImageOp op = new AffineTransformOp(

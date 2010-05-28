@@ -38,20 +38,31 @@ public class Brain implements Runnable {
     
     private int result;
 
-
-    public Brain(SLRTModel m) {
-        this.parentModel = m;
+    /**
+     * Class contructor. The om argument specifies the SLRTModel that controlls this Brain.
+     *
+     * @param  model  The refrence of the OpticalModel that this Brain communicates with
+     *
+     */
+    public Brain(SLRTModel model) {
+        this.parentModel = model;
         
         this.capturedImageChanged = false;
         this.algorithmRunning = false;
         this.result = -1;        
     }
 
+
+    /**
+     * Sets the EyeWebcam that gives a BufferedImage to brain for analysys
+     * @param eye
+     *
+     */
     public void setSiblingEye(EyeWebcam e) {
         this.siblingEye = e;
     }
 
-    /*
+    /**
      * This is called from the sibling Eye.
      * Whenever a new image was captured by the cam, this is set.
      * It means that at the next iteration, the brain _will have to_
@@ -63,21 +74,39 @@ public class Brain implements Runnable {
         }
     }
 
+    /**
+    * Returns immediatly, whether or not the int is null.
+    * @return      the int corresponding in Sign Language(Romanian Sign Language) to the letter shown in analyzed image
+    *
+    */
     public int getResult() {
         return this.result;
     }
 
-
+   /**
+    * Returns true if this Brain is running, else false
+    * @return true if this Brain is running, else false
+    */
     public Boolean checkAlgorithmRunning(){
      return this.algorithmRunning;
     }
 
+    /**
+     * Commands this Brain to resume running
+     */
     public void startAlgorithmRunning()
     {this.algorithmRunning=true;}
 
+    /**
+     * Commands this Brain to suspend 
+     */
      public void stopAlgorithmRunning()
     {this.algorithmRunning=false;}
-     
+ 
+    /**
+    * Overrides the Runnable run method. Checks an image to see if it contains a Sign Language letter and
+    * identifies the letter if true.
+    */
     @Override
     public void run() {
         Random r = new Random();
