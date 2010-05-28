@@ -33,6 +33,7 @@ public class SLRTModel extends Observable implements Runnable {
     private Word currentWord;
     private String displayedWord = "Test";
     private boolean displayedWordCorrect;
+    private boolean stopped;
 
     public SLRTModel() {
 
@@ -58,6 +59,7 @@ public class SLRTModel extends Observable implements Runnable {
         this.movementBrainThread.start();
 
         this.takeNextWordImage();
+        this.stopped=true;
     }
 
     public Vector<Word> getWords() {
@@ -208,16 +210,25 @@ public class SLRTModel extends Observable implements Runnable {
                     this.movementResultChanged = false;
                 }
                 if (this.pressedFromMovementBrain[0]) {
+                    if (stopped)
+                    {this.brain.startAlgorithmRunning();
+                     this.stopped=false;
+                    }
                     if (this.pressedFromMovementBrain[1]) {
                         this.takeNextWordImage();
                         this.displayedWord = "";
                     }
-                    if (this.pressedFromMovementBrain[2] == true) {
-                        String copy = null;
-                        copy = copy.copyValueOf(this.displayedWord.toCharArray(), 0, this.displayedWord.length() - 1);
-                        this.displayedWord = copy;
+//                    if (this.pressedFromMovementBrain[2] == true) {
+//                        String copy = null;
+//                        copy = copy.copyValueOf(this.displayedWord.toCharArray(), 0, this.displayedWord.length() - 1);
+//                        this.displayedWord = copy;
+//                    }
                     }
-                }
+                if (this.pressedFromMovementBrain[3]==true)
+                 {
+                    this.brain.stopAlgorithmRunning();
+                    this.stopped=true;
+                 }
             }
         }
     }
