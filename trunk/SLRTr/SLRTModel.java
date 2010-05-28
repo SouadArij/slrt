@@ -204,6 +204,9 @@ public class SLRTModel extends Observable implements Runnable {
                     }
 
                     if (this.pressedFromMovementBrain[0]) {
+                        if (this.brain.checkAlgorithmRunning()){
+                         this.brain.startAlgorithmRunning();
+                        }
                         if (this.pressedFromMovementBrain[1]) {
                             this.takeNextWordImage();
                             this.buildingWord = "";
