@@ -7,11 +7,11 @@
         <name>cat</name>
         <path>src/db/dictionary/cat.jpg</path>
     </word>
-	 <word>
+    s<word>
         <name>tree</name>
         <path>src/db/dictionary/tree.jpg</path>
     </word>
-	<word>
+    <word>
         <name>flower</name>
         <path>src/db/dictionary/flower.jpg</path>
     </word>

@@ -20,7 +20,7 @@ public class MovementBrain implements Runnable {
     private static int NEXTWORD_BUTTON_Y = 25 * IMAGE_SIZE_SETTING;
     private static int BUTTON_RADIUS = 20 * IMAGE_SIZE_SETTING;
 
-    private static int BUTTON_SENSITIVITY = 2;
+    private static int BUTTON_SENSITIVITY = 3;
     
     SLRTModel parentModel;
     
