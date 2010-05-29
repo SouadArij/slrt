@@ -21,7 +21,9 @@ import java.util.Observable;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import java.awt.image.BufferedImage;
-
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import java.lang.Runtime;
 
 
 public class GUINewTest extends GUIInterface {
@@ -170,6 +172,22 @@ public class GUINewTest extends GUIInterface {
 
         return null;
     }
+
+    function ShowDialogBox() {
+        var frame: JFrame = new JFrame("About SLRT");
+        var label: JLabel = new JLabel();
+        label.setText("          SLRT project: version 1.0");
+        
+        
+        frame.add(label);
+
+        frame.setSize(200, 200);
+        frame.setVisible(true);
+        //frame.setDefaultCloseOperation(frame.setVisible(false));
+
+
+    }
+
 
 
     public override function myRun() {
@@ -1127,8 +1145,11 @@ f    }
 								fill: Color.GREY;
 								opacity: 0.7
 								onMouseClicked: function (e) {
+
+                                                                // Desktop.getDesktop().open( new java.io.File("slrt.chm"));
                                                                         this.aboutHelpMenu = false;
                                                                         this.viewHelpHelpMenu = false;
+                                                                        
 								}
 							}
 							Text { //the view help menu button
@@ -1160,6 +1181,7 @@ f    }
 							fill: Color.GREY;
 							opacity: 0.7
 							onMouseClicked: function (e) {
+                                                                ShowDialogBox();
                                                                 this.aboutHelpMenu = false;
                                                                 this.viewHelpHelpMenu = false;
 							}
