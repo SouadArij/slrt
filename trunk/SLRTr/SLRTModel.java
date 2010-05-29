@@ -226,6 +226,7 @@ public class SLRTModel extends Observable implements Runnable {
     public void setNewResultFromGui(Boolean[] vec){
        this.clickedButtonsFromGui=vec;
        this.guiResultChanged=true;
+       this.highlightsFromMovementBrain=vec;
     }
 
     @Override
@@ -292,12 +293,15 @@ public class SLRTModel extends Observable implements Runnable {
                 if (this.clickedButtonsFromGui[1]) {
                     this.takeNextWordImage();
                     this.buildingWord = "";
+                    this.highlightsFromMovementBrain[1]=false;
+
                 }
 
                 if (this.clickedButtonsFromGui[2]) {
                     if (this.buildingWord.length() > 0) {
                         this.buildingWord = this.buildingWord.substring(0, this.buildingWord.length());
                     }
+                    this.highlightsFromMovementBrain[2]=false;
                 }
 
 
