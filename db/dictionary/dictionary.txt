@@ -1,2 +1,4 @@
 dog 
 cat
+tree
+flower
