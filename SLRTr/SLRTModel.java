@@ -33,6 +33,8 @@ public class SLRTModel extends Observable implements Runnable {
     private Word requieredWord;
     private String buildingWord;
     private String currentLetter;
+    private Boolean guiResultChanged;
+    private Boolean[] clickedButtonsFromGui;
 
     /**
      * Class contructor
@@ -77,6 +79,7 @@ public class SLRTModel extends Observable implements Runnable {
 
         this.buildingWord = "";
         this.currentLetter = "";
+        this.guiResultChanged=false;
 
     }
 
@@ -220,6 +223,11 @@ public class SLRTModel extends Observable implements Runnable {
         return this.brain.getProcessedImage();
     }
 
+    public void setNewResultFromGui(Boolean[] vec){
+       this.clickedButtonsFromGui=vec;
+       this.guiResultChanged=true;
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -238,10 +246,12 @@ public class SLRTModel extends Observable implements Runnable {
                 }
             }
 
+// from movement brain
             if (this.movementResultChanged) {
                 synchronized (lockObject1) {
                     this.movementResultChanged = false;
                 }
+
 
                 System.out.format("Model: movementResultChanged\n");
 
@@ -264,11 +274,39 @@ public class SLRTModel extends Observable implements Runnable {
                     }
                 }
 
+
                 if (this.pressedFromMovementBrain[3]) {
                     this.brain.stopAlgorithmRunning();
                     System.out.format("Model: called to stop algorithm\n");
                 }
             }
+//from gui
+            if (this.guiResultChanged)
+            {  
+                this.guiResultChanged=false;
+                if (this.clickedButtonsFromGui[0]) {
+                        this.brain.startAlgorithmRunning();
+                        System.out.format("Model: called to start algorithm\n");
+                }
+
+                if (this.clickedButtonsFromGui[1]) {
+                    this.takeNextWordImage();
+                    this.buildingWord = "";
+                }
+
+                if (this.clickedButtonsFromGui[2]) {
+                    if (this.buildingWord.length() > 0) {
+                        this.buildingWord = this.buildingWord.substring(0, this.buildingWord.length());
+                    }
+                }
+
+
+                if (this.clickedButtonsFromGui[3]) {
+                    this.brain.stopAlgorithmRunning();
+                    System.out.format("Model: called to stop algorithm\n");
+                }
+            }
+
 
             try {
                 Thread.sleep(100);
