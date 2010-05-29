@@ -71,12 +71,13 @@ public class ImageAlgorithms {
         int sxi, syi, dxi, dyi;
         double dx, dy, sxr, syr;
 
-        dx = (double) sx2 - sx1 / destinationWidth;
-        dy = (double) sy2 - sy1 / destinationHeight;
+        dx = (double) (sx2 - sx1) / destinationWidth;
+        dy = (double) (sy2 - sy1) / destinationHeight;        
 
-        syr = 0;
-        syi = 0;
+        syr = sy1;
+        syi = sy1;
         dyi = 0;
+        sxi = 0;
         while (dyi < destinationHeight) {
             sxr = sx1;
             sxi = sx1;
@@ -95,11 +96,14 @@ public class ImageAlgorithms {
             syi = (int) syr;
             dyi++;
         }
-
+        
         return dIm;
     }
 
     public static GrayImageAndHistogram grayIntIm2ContourImAndHistogram(int[][] grayIntIm, int radius) {
+        if ((grayIntIm == null) || (radius <= 0)) {
+            return null;
+        }
 
         int wi = grayIntIm[0].length, he = grayIntIm.length;
         int[][] contourIm = new int[he][wi];
@@ -151,10 +155,13 @@ public class ImageAlgorithms {
     }
 
     public static int computeNecessaryThreshold(double aim, int[] histogram, int imArea) {
-        int i = 256;
-        double sum = 0;
+        if ((aim < 0.0) || (aim > 1.0) || (histogram == null) || (imArea < 0)) {
+            return -1;
+        }
 
         int limit = (int) Math.round(imArea * aim);
+        double sum = 0;
+        int i = 256;
         do {
             i--;
             sum += histogram[i];
@@ -163,7 +170,11 @@ public class ImageAlgorithms {
         return i;
     }
 
-    public static boolean[][] grayIntIm2BoolIm(int[][] grayIntIm, int treshold) {
+    public static boolean[][] grayIntIm2BoolIm(int[][] grayIntIm, int threshold) {
+        if ((grayIntIm == null) || (threshold <= 0)) {
+            return null;
+        }
+
         int wi = grayIntIm[0].length, he = grayIntIm.length;
         boolean[][] boolIm = new boolean[he][wi];
         int sGray;
@@ -173,7 +184,7 @@ public class ImageAlgorithms {
             for (x = 0; x < wi; x++) {
                 sGray = grayIntIm[y][x];
 
-                if (sGray < treshold) {
+                if (sGray < threshold) {
                     boolIm[y][x] = false;
                 } else {
                     boolIm[y][x] = true;
@@ -185,6 +196,10 @@ public class ImageAlgorithms {
     }
 
     public static Shape findGreatestShape(boolean[][] boolIm) {
+        if (boolIm == null) {
+            return null;
+        }
+
         int wi = boolIm[0].length, he = boolIm.length;
         boolean[][] workingIm = new boolean[he][wi];
         int x, y;
@@ -573,12 +588,15 @@ public class ImageAlgorithms {
 
     public static double compareTwoBoolIms(boolean[][] aIm, boolean[][] bIm) {
         if ((aIm == null) || (bIm == null)) {
+            System.out.format("compare2BoolIms() failed1\n");
             return 0.0;
         }
         if ((aIm[0] == null) || (bIm[0] == null)) {
+            System.out.format("compare2BoolIms() failed2\n");
             return 0.0;
         }
         if ((aIm.length != bIm.length) || (aIm[0].length != bIm[0].length)) {
+            System.out.format("compare2BoolIms() failed3\n");
             return 0.0;
         }
         
@@ -593,14 +611,17 @@ public class ImageAlgorithms {
                 boolean b = bIm[y][x];
                 if (a) {
                     aArea++;
-                }
-                if (a && b) {                    
-                    commonArea++;
+                    if (b) {
+                        commonArea++;
+                    }
                 }
             }
         }
+        //System.out.format("compare2BoolIms(): aArea is %d\n", aArea);
+        //System.out.format("compare2BoolIms(): commonArea is %d\n", commonArea);
 
         double match = (double) commonArea / aArea;
+        //System.out.format("compare2BoolIms(): match rate is %.3f\n", match);
         return match;
     }
 
