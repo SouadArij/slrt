@@ -16,6 +16,7 @@ public class DBImage {
     public static int N_ANGLES = 4;
     public static int DB_IMAGE_WIDTH = 320;
     public static int DB_IMAGE_HEIGHT = 240;
+    public static final double DB_IMAGE_ASPECT_RATIO = 1.333;
     public static int CONTOUR_POWER = 2;
     public static double WHITE_PROPORTION = 0.04;
     public static int HV_AREA_LIMIT = 200;

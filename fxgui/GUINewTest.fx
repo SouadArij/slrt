@@ -48,6 +48,7 @@ public class GUINewTest extends GUIInterface {
     var currentLetter: String;
     var fillColor: Color;
     var wordImage: BufferedImage;
+    var processedImage: Image;
     
 
 
@@ -110,13 +111,20 @@ public class GUINewTest extends GUIInterface {
     //function to return the boolean array that gives which button has been highlighted from the SLRTModel
     function getHighlightedButtons():Boolean[]
     {
-        var result:Boolean[];
+        var result: Boolean[];
         var i: java.lang.Integer = 0;
-        for (nr in om.getHighlightsFromMovementBrain()){
-            result[i] = nr;
-            i++;}
-        return result;
+        var hl: Boolean[] = om.getHighlightsFromMovementBrain();
+        
+        if (hl == null) {
+            return result;
+        }
 
+        for (nr in hl) {
+            result[i] = nr;
+            i++;
+        }
+
+        return result;
     }
     
     //gets the pressed buttons from movementBrain
@@ -131,10 +139,28 @@ public class GUINewTest extends GUIInterface {
 
     }
 
+    function isThisPossible() : Object {
+        var buffIm : BufferedImage = om.getProcessedImageFromBrain();
+        if (buffIm == null) {
+            FX.print("FX:  processed image from brain is null;\n");
+            return null;
+        } else {
+            FX.print("FX:  processed image from brain has changed: ");
+            var hashCode : Integer = om.getProcessedImageFromBrain().hashCode();
+            FX.print(hashCode.toString());
+            FX.print("\n");
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain());
+        }
+
+        return null;
+    }
+
+
  
 
 
     public override function myRun() {
+            var notUsed : Object;
 
    //timeline to define the way FX gets its values from SLRTModel and updates the Scene
    Timeline {
@@ -147,6 +173,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
+            notUsed => isThisPossible();
             },
                 at(10s)
             {
@@ -156,7 +183,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(20s)
             {
             this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -165,7 +192,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(30s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -174,7 +201,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(40s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -183,7 +210,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(50s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -192,7 +219,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(60s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -201,7 +228,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(70s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -210,7 +237,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(80s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -219,7 +246,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(90s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -228,7 +255,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(100s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -237,7 +264,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(110s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -246,7 +273,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(120s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -255,7 +282,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(130s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -264,7 +291,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            },
+            notUsed => isThisPossible(); },
                 at(140s)
             {
             currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
@@ -273,7 +300,7 @@ public class GUINewTest extends GUIInterface {
             this.string => om.getBuildingWord();
             this.currentLetter => om.getCurrentLetter();
             this.wordImage => om.getWordImage();
-            }]
+            notUsed => isThisPossible(); }]
     }.play();
 
     var sceneX : Number = 300;
@@ -427,6 +454,14 @@ public class GUINewTest extends GUIInterface {
         opacity: 0.6
     }
 
+    var processedImage: ImageView = ImageView {
+        layoutX: 80;
+        layoutY: 60;
+        image: bind this.processedImage;
+        fitWidth: 80;
+        fitHeight: 60;
+    }
+
     var word: Text = Text {
         x: 120
         y: 467
@@ -493,7 +528,9 @@ public class GUINewTest extends GUIInterface {
     content: [
         webcamView, upRect, rail ,downRect, leftRect,
         rightRect, closeImage, playImage, stopImage,
-        nextWordImage, backImage, wordGrid, word, imageWord
+        nextWordImage, backImage, wordGrid, word, imageWord,
+
+        processedImage
         ]
     };
 

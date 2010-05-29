@@ -23,10 +23,10 @@ import java.util.logging.Logger;
 
 public class EyeWebcam {
 
-    public static final int HAND_CUT_X1 = 26;
-    public static final int HAND_CUT_Y1 = 110;
-    public static final int HAND_CUT_X2 = 347;
-    public static final int HAND_CUT_Y2 = 310;
+    public static final int HAND_CUT_X1 = 13;
+    public static final int HAND_CUT_Y1 = 55;
+    public static final int HAND_CUT_X2 = 173;
+    public static final int HAND_CUT_Y2 = 155;
 
     private SLRTModel parentModel;
     private BufferedImage image;
@@ -57,7 +57,7 @@ public class EyeWebcam {
                 CaptureStream cs = captureSystem.openCaptureDeviceStream(info.getDeviceID());
                 cs.setObserver(new MyCaptureObserver(this));
                 this.captureStream = cs;
-                this.image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+                //this.image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
             }
             System.out.println();
         } catch (Exception ex) {
@@ -114,8 +114,7 @@ public class EyeWebcam {
      */
     public void notifyWaitingComponents() {
         siblingBrain.setCapturedImageChanged();
-        parentModel.setChanged(true);
-
+        parentModel.setChanged(true);        
     }
 
     private class MyCaptureObserver implements CaptureObserver {

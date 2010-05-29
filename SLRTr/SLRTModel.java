@@ -5,6 +5,7 @@ import Data.Letter;
 import Data.Word;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +47,19 @@ public class SLRTModel extends Observable implements Runnable {
         }
         this.database = new Database();
         this.loadPreprocessedImages2DB();
+        
+        /* for debugging
+        Iterator<Letter> itlt = this.database.getLetters().iterator();
+        while (itlt.hasNext()) {
+            Letter lt = itlt.next();
+            System.out.format("letter name: %s, path: %s\n", lt.getName(), lt.getDirPath());
+        }
+        Iterator<Word> itwd = this.database.getWords().iterator();
+        while (itwd.hasNext()) {
+            Word wd = itwd.next();
+            System.out.format("word name: %s\n", wd.getName());
+        }
+         */
 
         this.brain = new Brain(this);
         this.eye = new EyeWebcam(this);
@@ -61,6 +75,7 @@ public class SLRTModel extends Observable implements Runnable {
 
         this.takeNextWordImage();
 
+        this.buildingWord = "";
         this.currentLetter = "";
 
     }
@@ -111,7 +126,7 @@ public class SLRTModel extends Observable implements Runnable {
      * Usually used when starting the program.
      */
     public void loadPreprocessedImages2DB() {
-        this.database.process();
+        this.database.load();
     }
 
     /**
@@ -144,26 +159,12 @@ public class SLRTModel extends Observable implements Runnable {
         synchronized (lockObject1) {
             this.brainResultChanged = true;
         }
-        //take the correspongind letter and concat it to displayed string in gui
-        // this.displayedWord += (this.database.getLetters().get(this.resultFromBrain - 1)).getName();
-        //if the currentWord contains the displayedWord the the result is good
-        //  this.displayedWordCorrect = this.currentWord.getName().contains(this.displayedWord);
-
-
-        /* Huni: this won't be needed, we'll get the
-         * result in the run when we get there.
-         * 
-        this.resultFromBrain = brain.getResult();
-         */
     }
 
-    /**
-     * This method is called by the MovementBrain to notify that the analyze completed
-     */
-    public void setNewResultFromMovementBrain(boolean b) {
-        this.movementResultChanged = b;
-        this.highlightsFromMovementBrain = movementBrain.getHighlightedButtons();
-        this.pressedFromMovementBrain = movementBrain.getPressedButtons();
+    public void setMovementBrainResultChanged() {
+        synchronized (this.lockObject1) {
+            this.movementResultChanged = true;
+        }
     }
 
     /**
@@ -215,6 +216,10 @@ public class SLRTModel extends Observable implements Runnable {
         return this.currentLetter;
     }
 
+    public BufferedImage getProcessedImageFromBrain() {
+        return this.brain.getProcessedImage();
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -231,34 +236,40 @@ public class SLRTModel extends Observable implements Runnable {
                 if (displayedWord.equals(this.requieredWord.getName().substring(0, displayedWord.length() - 1))) {
                     this.buildingWord += this.currentLetter;
                 }
+            }
 
+            if (this.movementResultChanged) {
+                synchronized (lockObject1) {
+                    this.movementResultChanged = false;
+                }
 
-                if (this.movementResultChanged) {
-                    synchronized (lockObject1) {
-                        this.movementResultChanged = false;
+                System.out.format("Model: movementResultChanged\n");
 
-                    }
+                this.highlightsFromMovementBrain = this.movementBrain.getHighlightedButtons();
+                this.pressedFromMovementBrain = this.movementBrain.getPressedButtons();
 
-                    if (this.pressedFromMovementBrain[0]) {
-                        if (this.brain.checkAlgorithmRunning()){
-                         this.brain.startAlgorithmRunning();
-                        }
-                        if (this.pressedFromMovementBrain[1]) {
-                            this.takeNextWordImage();
-                            this.buildingWord = "";
-                        }
-                        if (this.pressedFromMovementBrain[2]) {
-                            this.buildingWord = this.buildingWord.substring(0, this.buildingWord.length() - 2);
-                        }
+                if (this.pressedFromMovementBrain[0]) {
+                        this.brain.startAlgorithmRunning();
+                        System.out.format("Model: called to start algorithm\n");
+                }
 
-                        if (this.pressedFromMovementBrain[3] == true) {
-                            this.brain.stopAlgorithmRunning();
-                        }
+                if (this.pressedFromMovementBrain[1]) {
+                    this.takeNextWordImage();
+                    this.buildingWord = "";
+                }
 
-
+                if (this.pressedFromMovementBrain[2]) {
+                    if (this.buildingWord.length() > 0) {
+                        this.buildingWord = this.buildingWord.substring(0, this.buildingWord.length());
                     }
                 }
+
+                if (this.pressedFromMovementBrain[3]) {
+                    this.brain.stopAlgorithmRunning();
+                    System.out.format("Model: called to stop algorithm\n");
+                }
             }
+
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
