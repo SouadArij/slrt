@@ -7,4 +7,12 @@
         <name>cat</name>
         <path>src/db/dictionary/cat.jpg</path>
     </word>
+	 <word>
+        <name>tree</name>
+        <path>src/db/dictionary/tree.jpg</path>
+    </word>
+	<word>
+        <name>flower</name>
+        <path>src/db/dictionary/flower.jpg</path>
+    </word>
 </dictionary>
