@@ -1,5 +1,6 @@
 package SLRTr;
 
+import Data.DBImage;
 import Data.Database;
 import Data.Letter;
 import Data.Word;
@@ -130,6 +131,17 @@ public class SLRTModel extends Observable implements Runnable {
      */
     public void loadPreprocessedImages2DB() {
         this.database.load();
+
+        /*
+        Vector<Letter> letters = this.database.getLetters();
+        System.out.format("Model: letters size is %d\n", letters.size());
+        Iterator<Letter> itlt = letters.iterator();
+        while (itlt.hasNext()) {
+            Letter letter = itlt.next();
+            Vector<DBImage> images = letter.getDBImages();
+            System.out.format("Model: letter %s has %d images\n", letter.getName(), images.size());
+        }
+         */
     }
 
     /**
@@ -238,13 +250,15 @@ public class SLRTModel extends Observable implements Runnable {
                     this.brainResultChanged = false;
                 }
 
-                int currentLetterId = this.brain.getResult();
+                int currentLetterId = this.brain.getResult();                
                 this.currentLetter = this.database.id2String(currentLetterId);
                 String displayedWord = this.buildingWord + this.currentLetter;
-
-                if (displayedWord.equals(this.requieredWord.getName().substring(0, displayedWord.length() - 1))) {
+                //System.out.format("Model: displayedWord = %s\n", displayedWord);
+                //System.out.format("Model: requiredWord's substring = %s\n", this.requieredWord.getName().substring(0, displayedWord.length()));
+                if (displayedWord.equalsIgnoreCase(this.requieredWord.getName().substring(0, displayedWord.length()))) {
                     this.buildingWord += this.currentLetter;
                 }
+
             }
 
 // from movement brain
@@ -254,31 +268,32 @@ public class SLRTModel extends Observable implements Runnable {
                 }
 
 
-                System.out.format("Model: movementResultChanged\n");
+                //System.out.format("Model: movementResultChanged\n");
 
                 this.highlightsFromMovementBrain = this.movementBrain.getHighlightedButtons();
                 this.pressedFromMovementBrain = this.movementBrain.getPressedButtons();
 
                 if (this.pressedFromMovementBrain[0]) {
                         this.brain.startAlgorithmRunning();
-                        System.out.format("Model: called to start algorithm\n");
+                        //System.out.format("Model: called to start algorithm\n");
                 }
 
                 if (this.pressedFromMovementBrain[1]) {
                     this.takeNextWordImage();
                     this.buildingWord = "";
+                    //System.out.format("Next pressed, building word reset.\n");
                 }
 
                 if (this.pressedFromMovementBrain[2]) {
                     if (this.buildingWord.length() > 0) {
-                        this.buildingWord = this.buildingWord.substring(0, this.buildingWord.length());
+                        this.buildingWord = this.buildingWord.substring(0, this.buildingWord.length() - 1);
                     }
                 }
 
 
                 if (this.pressedFromMovementBrain[3]) {
                     this.brain.stopAlgorithmRunning();
-                    System.out.format("Model: called to stop algorithm\n");
+                    //System.out.format("Model: called to stop algorithm\n");
                 }
             }
 //from gui
@@ -287,7 +302,7 @@ public class SLRTModel extends Observable implements Runnable {
                 this.guiResultChanged=false;
                 if (this.clickedButtonsFromGui[0]) {
                         this.brain.startAlgorithmRunning();
-                        System.out.format("Model: called to start algorithm\n");
+                        //System.out.format("Model: called to start algorithm\n");
                 }
 
                 if (this.clickedButtonsFromGui[1]) {
@@ -307,7 +322,7 @@ public class SLRTModel extends Observable implements Runnable {
 
                 if (this.clickedButtonsFromGui[3]) {
                     this.brain.stopAlgorithmRunning();
-                    System.out.format("Model: called to stop algorithm\n");
+                    //System.out.format("Model: called to stop algorithm\n");
                 }
             }
 

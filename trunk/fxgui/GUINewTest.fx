@@ -157,21 +157,6 @@ public class GUINewTest extends GUIInterface {
 
     }
 
-    function isThisPossible() : Object {
-        var buffIm : BufferedImage = om.getProcessedImageFromBrain();
-        if (buffIm == null) {
-            FX.print("FX:  processed image from brain is null;\n");
-            return null;
-        } else {
-            FX.print("FX:  processed image from brain has changed: ");
-            var hashCode : Integer = om.getProcessedImageFromBrain().hashCode();
-            FX.print(hashCode.toString());
-            FX.print("\n");
-            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain());
-        }
-
-        return null;
-    }
 
     function ShowDialogBox() {
         var frame: JFrame = new JFrame("About SLRT");
@@ -195,133 +180,147 @@ public class GUINewTest extends GUIInterface {
 
    //timeline to define the way FX gets its values from SLRTModel and updates the Scene
 
-        Timeline {
-            repeatCount: Timeline.INDEFINITE
-            keyFrames: [
-                at(0s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(10s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(20s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(30s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(40s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(50s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(60s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(70s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(80s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(90s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(100s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(110s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(120s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(130s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                },
-                at(140s) {
-                    this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
-                    this.highlightedButtons => getHighlightedButtons();
-                    this.imageButtons => updateButtons(this.highlightedButtons);
-                    this.string => om.getBuildingWord();
-                    this.currentLetter => om.getCurrentLetter();
-                    this.wordImage => om.getWordImage();
-                }
-         ]
+   Timeline {
+    repeatCount: Timeline.INDEFINITE
+    keyFrames: [at(0s)
+            {
+            this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain());
+            },
+                at(10s)
+            {
+            this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(20s)
+            {
+            this.currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(30s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(40s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(50s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(60s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(70s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(80s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(90s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(100s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(110s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(120s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(130s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); },
+                at(140s)
+            {
+            currImg => javafx.ext.swing.SwingUtils.toFXImage(om.getCapturedImageFromEye());
+            this.highlightedButtons => getHighlightedButtons();
+            this.imageButtons => updateButtons(this.highlightedButtons);
+            this.string => om.getBuildingWord();
+            this.currentLetter => om.getCurrentLetter();
+            this.wordImage => om.getWordImage();
+            this.processedImage => javafx.ext.swing.SwingUtils.toFXImage(om.getProcessedImageFromBrain()); }];
     }.play();
 
-    var sceneX : Number = 300;
+       var sceneX : Number = 300;
     var sceneY : Number = 200;
 
     //path for drawing the frame where the sign must be made
@@ -509,7 +508,7 @@ public class GUINewTest extends GUIInterface {
                     effect: DropShadow{}
                     visible: bind highlightedButtons[0] //visible only when play button is highlighted
 
-                }   
+                }
         ]
     }
 
@@ -621,7 +620,7 @@ f    }
     fxMenuBar.layoutY = 4;
     */
 
-    
+
 
 
 
@@ -646,6 +645,19 @@ f    }
 
     }
 
+    var procImage: ImageView = ImageView {
+        layoutX: 646-160;
+        layoutY: 560-120-40;
+
+        image: bind this.processedImage;
+        fitWidth: 160;
+        fitHeight: 120;
+        opacity: 0.7;
+        preserveRatio: true
+        smooth: true
+        cache: true
+    }
+
 
     var menuFX: Group = Group {
         content: [
@@ -658,7 +670,7 @@ f    }
                     arcHeight: 10
                     fill: Color.GREY;
                     opacity: 0.7
-                    
+
 
                     //visible: bind visibleMenu
               }
@@ -713,7 +725,7 @@ f    }
                                 onMouseExited: function (e) {
                                         this.onFileSelect = false;
                                 }
-                                
+
                            }
                            Group { //the file menu expanded
                                content: [
@@ -1124,6 +1136,7 @@ f    }
                                visible: true
                                onMouseEntered: function (e) {
                                         this.onHelpSelect = true;
+
                                 }
                                 onMouseExited: function (e) {
                                         this.onHelpSelect = false;
@@ -1145,8 +1158,8 @@ f    }
 								fill: Color.GREY;
 								opacity: 0.7
 								onMouseClicked: function (e) {
-
-                                                                // Desktop.getDesktop().open( new java.io.File("slrt.chm"));
+                                                                java.lang.Runtime.getRuntime().exec("C:\\WINDOWS\\hh.exe slrt.chm");
+                                                                
                                                                         this.aboutHelpMenu = false;
                                                                         this.viewHelpHelpMenu = false;
                                                                         
@@ -1173,7 +1186,7 @@ f    }
 							x: 170
 							y: 63
 							height: 30
-							width: 92	
+							width: 92
 							arcWidth: 5//10
 							arcHeight: 5//10
 							stroke: Color.BLACK
@@ -1220,7 +1233,7 @@ f    }
         onMouseExited: function (e) {
                     this.visibleMenu = false;
         }*/
-        
+
     }
 
 
@@ -1236,7 +1249,7 @@ f    }
         height: 560
         scene: Scene {
                 content: [
-                    webcamView, grid, appButtons, displayGroup, menuBarRect, menuFX
+                    webcamView, grid, appButtons, displayGroup, menuBarRect, menuFX,procImage
                 ]
         }
     }
