@@ -39,25 +39,23 @@ public class Database {
      * Then load preprocessed DB images from disk to memory.
      */
     public void load() {
-        Letter letter = null;
-        File dirPath;
-        File[] files;
-        Vector<DBImage> dbImages = new Vector();
-        int i;
-
         this.XMLparseLetters();
         this.XMLparseWords();
 
-        Iterator<Letter> itlt = letters.iterator();
+        //System.out.format("Database/load(): after parsing i have %d letters\n", this.letters.size());
+        Iterator<Letter> itlt = this.letters.iterator();
         while (itlt.hasNext()) {
-            letter = itlt.next();
-            dirPath = letter.getDirPath();
-            files = dirPath.listFiles(new DBImageFileFilter());
-            for (i = 0; i < files.length; i++) {
+            Letter letter = itlt.next();
+            File dirPath = letter.getDirPath();
+            File[] files = dirPath.listFiles(new DBImageFileFilter());
+            //System.out.format("Database/load(): have %d images for %s letter (filepaths)\n", files.length, letter.getName());
+            Vector<DBImage> dbImages = new Vector();
+            for (int i = 0; i < files.length; i++) {
                 dbImages.add(DBImage.loadFromDisk(files[i]));
             }
             letter.setDBImages(dbImages);
-        }
+            //System.out.format("Database/load(): finally that letter has %d images\n", letter.getDBImages().size());
+        }        
     }
 
     /**
@@ -218,13 +216,17 @@ public class Database {
                     xmlStreamWriter.writeStartElement("name");
                     xmlStreamWriter.writeCharacters(letter);
                     xmlStreamWriter.writeEndElement();
+                    output.write("\n", 0, new String("\n").length());
                     xmlStreamWriter.writeStartElement("path");
                     xmlStreamWriter.writeCharacters("src/db/letters/" + letter + "/");
                     xmlStreamWriter.writeEndElement();
+                    output.write("\n", 0, new String("\n").length());
                     xmlStreamWriter.writeEndElement();
+                    output.write("\n", 0, new String("\n").length());
                 }
                 br.close();
                 xmlStreamWriter.writeEndElement();
+                output.write("\n", 0, new String("\n").length());
 
                 xmlStreamWriter.flush();
                 xmlStreamWriter.close();
@@ -295,12 +297,12 @@ public class Database {
  * @return
  */
     public String id2String(int id) {
-        if (this.words == null) {
+        if (this.letters == null) {
             return "_";
         }
-        if (id - 1 < 0 || id - 1 > this.words.size() - 1) {
+        if (id - 1 < 0 || id - 1 > this.letters.size() - 1) {
             return "_";
         }
-        return this.words.get(id - 1).getName();
+        return this.letters.get(id - 1).getName();
     }
 }

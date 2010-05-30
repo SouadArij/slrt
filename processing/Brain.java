@@ -14,8 +14,8 @@ import java.util.Vector;
 
 public class Brain implements Runnable {
 
-    private static final double MINIMUM_RATE_NEEDED_TO_MATCH = 0.62;
-    private static final int MINIMUM_NUMBER_NEEDED_TO_MATCH = 0;
+    private static final double MINIMUM_RATE_NEEDED_TO_MATCH = 0.1;
+    private static final double MINIMUM_PROPORTION_OF_IMAGES_NEEDED_TO_MATCH = 0.0001;
     /* Synchronization purposes.
      * Can not write <capturedImageChanged> by two different
      * threads at the same time. Yes I'm smart :>
@@ -83,9 +83,6 @@ public class Brain implements Runnable {
     }
 
     public BufferedImage getProcessedImage() {
-        if (this.processedImage == null) {
-            System.out.format("Brain: null processedImage was get.\n");
-        }
         return this.processedImage;
     }
 
@@ -158,12 +155,12 @@ public class Brain implements Runnable {
                         continue;
                     }
                     BufferedImage capturedIm = this.siblingEye.getImage();
-                    System.out.format("Brain: capIm's with is %d and height is %d\n", capturedIm.getWidth(), capturedIm.getHeight());
+                    //System.out.format("Brain: capIm's with is %d and height is %d\n", capturedIm.getWidth(), capturedIm.getHeight());
                     if (capturedIm == null) {
                         continue;
                     }
                     double ar = (double) (EyeWebcam.HAND_CUT_X2 - EyeWebcam.HAND_CUT_X1) / (EyeWebcam.HAND_CUT_Y2 - EyeWebcam.HAND_CUT_Y1);
-                    System.out.format("Brain: aspect ratio = %.2f\n", ar);
+                    //System.out.format("Brain: aspect ratio = %.2f\n", ar);
                     int camImWidth, camImHeight;
                     int cutX1 = EyeWebcam.HAND_CUT_X1;
                     int cutX2 = EyeWebcam.HAND_CUT_X2;
@@ -182,9 +179,9 @@ public class Brain implements Runnable {
                         cutX1 = (int) (EyeWebcam.HAND_CUT_X1 + cutWidth);
                         cutX2 = (int) (EyeWebcam.HAND_CUT_X2 - cutWidth);
                     }                    
-                    System.out.format("Brain: camImWidth = %d, camImHeight = %d\n", camImWidth, camImHeight);
-                    System.out.format("Brain: cutX2 = %d, cutX1 = %d, cutY2 = %d, cutY1 = %d\n", cutX2, cutX1, cutY2, cutY1);
-                    System.out.format("Brain: cutX2 - cutX1 / cutY2 - cutY1 = %.3f\n", (double) (cutX2 - cutX1) / (cutY2 - cutY1));
+                    //System.out.format("Brain: camImWidth = %d, camImHeight = %d\n", camImWidth, camImHeight);
+                    //System.out.format("Brain: cutX2 = %d, cutX1 = %d, cutY2 = %d, cutY1 = %d\n", cutX2, cutX1, cutY2, cutY1);
+                    //System.out.format("Brain: cutX2 - cutX1 / cutY2 - cutY1 = %.3f\n", (double) (cutX2 - cutX1) / (cutY2 - cutY1));
                     int[][] cutResizedGrayIntIm = ImageAlgorithms.buffIm2CutGrayResizedIntIm(capturedIm, cutX1, cutY1, cutX2, cutY2, DBImage.DB_IMAGE_WIDTH, DBImage.DB_IMAGE_HEIGHT);
                     if (cutResizedGrayIntIm == null) {
                         continue;
@@ -193,11 +190,11 @@ public class Brain implements Runnable {
                     int[][] contourIntIm = contourIntImAndHistogram.getGrayImage();
                     int[] histogram = contourIntImAndHistogram.getHistogram();
                     int threshold = ImageAlgorithms.computeNecessaryThreshold(DBImage.WHITE_PROPORTION, histogram, camImWidth * camImHeight);
-                    System.out.format("Brain: threshold = %d\n", threshold);
+                    //System.out.format("Brain: threshold = %d\n", threshold);
                     boolean[][] camBoolIm = ImageAlgorithms.grayIntIm2BoolIm(contourIntIm, threshold);
                     this.processedImage = ImageAlgorithms.boolIm2BuffIm(camBoolIm, Color.BLACK.getRGB(), Color.WHITE.getRGB());
                     Shape greatestShape = ImageAlgorithms.findGreatestShape(camBoolIm);
-                    System.out.format("Brain: greatestShape's area is %d\n", greatestShape.getArea());
+                    //System.out.format("Brain: greatestShape's area is %d\n", greatestShape.getArea());
 
                     Point2D leftMostPoint = greatestShape.getLeftMostPoint();
                     Point2D rightMostPoint = greatestShape.getRightMostPoint();
@@ -213,7 +210,7 @@ public class Brain implements Runnable {
                     int camTopShapeCenter = topShape.getCenter().getY();
                     int camShapeWidth = rightShape.getCenter().getX() - camLeftShapeCenter;
                     int camShapeHeight = bottomShape.getCenter().getY() - camTopShapeCenter;
-                    System.out.format("Brain: camLeftShapeCenter = %d, camTopShapeCenter = %d, camShapeWidth = %d, camShapeHeight = %d\n", camLeftShapeCenter, camTopShapeCenter, camShapeWidth, camShapeHeight);
+                    //System.out.format("Brain: camLeftShapeCenter = %d, camTopShapeCenter = %d, camShapeWidth = %d, camShapeHeight = %d\n", camLeftShapeCenter, camTopShapeCenter, camShapeWidth, camShapeHeight);
 
                     /* Comparison part.
                      * Similar to that sucky algorithm Iulia showed me.
@@ -224,13 +221,15 @@ public class Brain implements Runnable {
                     if (letters == null) {
                         continue;
                     }
+                    //System.out.format("Brain: got %d letters.\n", letters.size());
                     Iterator<Letter> itlt = letters.iterator();
                     int letterIndex = 0;
-                    int maxMatched = 0;
-                    int maxMatchedIndex = 0;
+                    double maxMatchedDouble = 0.0;
+                    int maxMatchedIndex = 0;                    
                     while (itlt.hasNext()) {
                         Letter letter = itlt.next();
                         Vector<DBImage> dbIms = letter.getDBImages();
+                        //System.out.format("Brain: got %d images for letter %d.\n", dbIms.size(), letterIndex);
                         if (dbIms == null) {
                             continue;
                         }
@@ -241,47 +240,51 @@ public class Brain implements Runnable {
                             DBImage dbIm = itim.next();
 
                             boolean[][] dbBoolIm = dbIm.getRaster();
-                            System.out.format("dbBoolIm's width and heigth is %d and %d\n", dbBoolIm[0].length, dbBoolIm.length);
+                            //System.out.format("dbBoolIm's width and heigth is %d and %d\n", dbBoolIm[0].length, dbBoolIm.length);
                             int dbLeftShapeCenter = dbIm.getLeftShapeCenter();
                             int dbTopShapeCenter = dbIm.getTopShapeCenter();
                             int dbShapeWidth = dbIm.getShapeWidth();
                             int dbShapeHeight = dbIm.getShapeHeight();
-                            System.out.format("Brain: dbLeftShapeCenter = %d, dbTopShapeCenter = %d, dbShapeWidth = %d, dbShapeHeight = %d\n", dbLeftShapeCenter, dbTopShapeCenter, dbShapeWidth, dbShapeHeight);
+                            //System.out.format("Brain: dbLeftShapeCenter = %d, dbTopShapeCenter = %d, dbShapeWidth = %d, dbShapeHeight = %d\n", dbLeftShapeCenter, dbTopShapeCenter, dbShapeWidth, dbShapeHeight);
                             boolean[][] transZoomedBoolIm = ImageAlgorithms.transZoomBoolIm(camBoolIm, dbLeftShapeCenter - camLeftShapeCenter, dbTopShapeCenter - camTopShapeCenter, (double) dbShapeWidth / camShapeWidth, (double) dbShapeHeight / camShapeHeight, camLeftShapeCenter, camTopShapeCenter);
-                            System.out.format("transZoomedBoolIm's width and heigth is %d and %d\n", transZoomedBoolIm[0].length, transZoomedBoolIm.length);
+                            //this.processedImage = ImageAlgorithms.boolIm2BuffIm(transZoomedBoolIm, Color.BLACK.getRGB(), Color.BLUE.brighter().getRGB());
+                            //System.out.format("transZoomedBoolIm's width and heigth is %d and %d\n", transZoomedBoolIm[0].length, transZoomedBoolIm.length);
 
-                            double match = ImageAlgorithms.compareTwoBoolIms(transZoomedBoolIm, dbBoolIm);                            
+                            double match = ImageAlgorithms.compareTwoBoolIms(camBoolIm, dbBoolIm);
+                            //double match = ImageAlgorithms.compareTwoBoolIms(transZoomedBoolIm, dbBoolIm);
+                            //System.out.format("matching with letter %d, %d. image gives %.3f\n", letterIndex, imIndex, match);
                             if (match >= Brain.MINIMUM_RATE_NEEDED_TO_MATCH) {
                                 nMatched++;
                             }
 
                             imIndex++;
                         }
-                        if (nMatched > maxMatched) {
-                            maxMatched = nMatched;
-                            maxMatchedIndex = letterIndex;
+                        double nMatchedDouble = (double) nMatched / dbIms.size();
+                        if (nMatchedDouble > maxMatchedDouble) {
+                            maxMatchedDouble = nMatchedDouble;
+                            maxMatchedIndex = letterIndex + 1;
                         }
 
                         letterIndex++;
                     }
-                    System.out.format("Brain: compared with %d letters.\n", letterIndex);
+                    System.out.format("Brain: compared with %d letters, maxMatchedDouble = %.3f, maxMatchedIndex = %d.\n", letterIndex, maxMatchedDouble, maxMatchedIndex);
 
                     /* Evaluating the comparison.
                      */
-                    if (maxMatched > Brain.MINIMUM_NUMBER_NEEDED_TO_MATCH) {
+                    if (maxMatchedDouble > Brain.MINIMUM_PROPORTION_OF_IMAGES_NEEDED_TO_MATCH) {
                         currentResult = maxMatchedIndex;
                     } else {
                         currentResult = -1;
-                    }
-                    System.out.format("Brain: currentResult = %d.\n", currentResult);
+                    }                    
 
-                    /* For testing:
-                     * currentResult = r.nextInt(100);
-                     */
+                    /* For testing: */
+                    //currentResult = 1 + r.nextInt(4);
+                     
                 }
 
                 if (currentResult != this.result) {
                     this.result = currentResult;
+                    System.out.format("Brain: new result = %d\n", result);
                     this.parentModel.setBrainResultChanged();
                 }
             }
